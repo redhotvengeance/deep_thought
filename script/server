@@ -1,0 +1,6 @@
+#!/bin/sh
+
+: ${RACK_ENV:="development"}
+export RACK_ENV
+
+bin/shotgun -p4242 -sthin -Ilib config.ru
