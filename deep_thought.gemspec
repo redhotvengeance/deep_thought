@@ -18,6 +18,7 @@ Gem::Specification.new do |gem|
   gem.require_paths = ["lib"]
 
   gem.add_dependency "sinatra", "~>1.4"
+  gem.add_dependency "grit", "~>2.5"
 
   # development
   gem.add_development_dependency "shotgun", "~>0.9"
