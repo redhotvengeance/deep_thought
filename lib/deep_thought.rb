@@ -1,8 +1,31 @@
+require "active_record"
+
 require "deep_thought/app"
 require "deep_thought/deploy"
 require "deep_thought/version"
 
 module DeepThought
+  def self.setup(settings)
+    env = settings['RACK_ENV']
+
+    if env != "production"
+      settings["DATABASE_URL"] ||= "postgres://deep_thought@localhost/deep_thought_#{env}"
+    end
+
+    database = URI(settings["DATABASE_URL"])
+
+    connection = {
+      :adapter   => "postgresql",
+      :encoding  => "unicode",
+      :database  => database.path[1..-1],
+      :pool      => 5,
+      :username  => database.user,
+      :password  => database.password
+    }
+
+    ActiveRecord::Base.establish_connection(connection)
+  end
+
   def self.app
     @app ||= Rack::Builder.app {
       map '/' do

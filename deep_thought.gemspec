@@ -18,11 +18,14 @@ Gem::Specification.new do |gem|
   gem.require_paths = ["lib"]
 
   gem.add_dependency "sinatra", "~>1.4"
+  gem.add_dependency "activerecord", "~>3.2"
+  gem.add_dependency "pg", "~>0.15"
   gem.add_dependency "grit", "~>2.5"
 
   # development
   gem.add_development_dependency "shotgun", "~>0.9"
   gem.add_development_dependency "thin", "~>1.5"
+  gem.add_development_dependency "tux", "~>0.3"
   gem.add_development_dependency "dotenv", "~>0.6"
 
   # testing

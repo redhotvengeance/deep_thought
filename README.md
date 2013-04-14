@@ -20,6 +20,37 @@ Or install it yourself as:
 
 TODO: Write usage instructions here
 
+## Hacking
+
+Want to hack on Deep Thought?
+
+Set it up:
+
+    script/bootstrap
+
+Create an `.env`:
+
+    echo RACK_ENV=development > .env
+
+Set up the databases (PostgreSQL):
+
+    createuser deep_thought
+    createdb -O deep_thought -E utf8 deep_thought_development
+    createdb -O deep_thought -E utf8 deep_thought_test
+    rake db:migrate
+
+Start the server:
+
+    script/server
+
+Open it:
+
+    open http://localhost:4242
+
+Test it:
+
+    script/test
+
 ## Contributing
 
 1. Fork it
