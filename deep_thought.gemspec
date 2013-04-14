@@ -23,6 +23,7 @@ Gem::Specification.new do |gem|
   # development
   gem.add_development_dependency "shotgun", "~>0.9"
   gem.add_development_dependency "thin", "~>1.5"
+  gem.add_development_dependency "dotenv", "~>0.6"
 
   # testing
   gem.add_development_dependency "minitest", "~>4.7"
