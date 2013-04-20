@@ -4,12 +4,12 @@ require "active_record"
 require "./lib/deep_thought"
 
 task :environment => :dotenv do
+  puts "RACK_ENV: #{ENV['RACK_ENV']}"
+  
   DeepThought.setup(ENV)
 end
 
 namespace :db do
-  # TODO: Environment-based database actions
-
   desc "Migrate the database"
   task :migrate => :environment do
     ActiveRecord::Migrator.migrate('db/migrate', ENV["VERSION"] ? ENV["VERSION"].to_i : nil )

@@ -30,4 +30,7 @@ Gem::Specification.new do |gem|
 
   # testing
   gem.add_development_dependency "minitest", "~>4.7"
+  gem.add_development_dependency "mocha", "~>0.13"
+  gem.add_development_dependency "database_cleaner", "~>0.9"
+  gem.add_development_dependency "turn", "~>0.9"
 end
