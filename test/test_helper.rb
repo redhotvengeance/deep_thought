@@ -2,6 +2,7 @@ $LOAD_PATH.unshift File.expand_path('../../lib', __FILE__)
 
 require 'deep_thought'
 require 'rubygems'
+require 'fileutils'
 gem 'minitest'
 require 'minitest/autorun'
 require 'rack/test'
