@@ -21,17 +21,17 @@ class DeepThoughtGitTest < MiniTest::Unit::TestCase
   end
 
   def test_git_setup_success
-    @project.repo_url = 'https://github.com/redhotvengeance/test.git'
+    @project.repo_url = './test/fixtures/test'
     assert DeepThought::Git.setup(@project)
   end
 
   def test_git_get_latest_commit_for_branch_success
-    @project.repo_url = 'https://github.com/redhotvengeance/test.git'
+    @project.repo_url = './test/fixtures/test'
     assert_kind_of Array, DeepThought::Git.get_latest_commit_for_branch(@project, 'master')
   end
 
   def test_git_get_latest_commit_for_branch_failed
-    @project.repo_url = 'https://github.com/redhotvengeance/test.git'
+    @project.repo_url = './test/fixtures/test'
     assert_empty DeepThought::Git.get_latest_commit_for_branch(@project, 'no-branch')
   end
 end

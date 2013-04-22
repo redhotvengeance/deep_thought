@@ -29,7 +29,7 @@ module DeepThought
       if !hashes
         return [500, "Woah - I can't seem to access that repo. Are you sure the URL is correct and that I have access to it?"]
       end
-        
+
       hash = Git.get_latest_commit_for_branch(project, branch)[0]
 
       if !hash

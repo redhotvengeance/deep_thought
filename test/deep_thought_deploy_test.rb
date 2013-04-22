@@ -12,11 +12,19 @@ class DeepThoughtDeployTest < MiniTest::Unit::TestCase
     if File.directory?(".projects/test-no-branch")
       FileUtils.rm_rf(".projects/test-no-branch")
     end
+
+    if File.directory?(".projects/test-no-repo")
+      FileUtils.rm_rf(".projects/test-no-repo")
+    end
   end
 
   def teardown
     if File.directory?(".projects/test-no-branch")
       FileUtils.rm_rf(".projects/test-no-branch")
+    end
+
+    if File.directory?(".projects/test-no-repo")
+      FileUtils.rm_rf(".projects/test-no-repo")
     end
 
     DatabaseCleaner.clean
@@ -63,7 +71,7 @@ class DeepThoughtDeployTest < MiniTest::Unit::TestCase
   end
 
   def test_deploy_no_branch
-    project = DeepThought::Project.create(:name => 'test-no-branch', :repo_url => 'https://github.com/redhotvengeance/test.git', :deploy_type => 'capy')
+    project = DeepThought::Project.create(:name => 'test-no-branch', :repo_url => './test/fixtures/test', :deploy_type => 'capy')
     post '/deploy/test-no-branch', params={:branch => 'no-branch'}
     assert !last_response.ok?
     assert_equal "Hmm, that branch doesn't appear to exist. Have you pushed it?", last_response.body
