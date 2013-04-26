@@ -3,14 +3,20 @@ require 'grit'
 module DeepThought
   class Git
     def self.setup(project)
-      repo = Grit::Git.new(".projects/#{project.name}")
+      exit_status = system "git clone #{project.repo_url} .projects/#{project.name} > /dev/null 2>&1"
 
-      process = repo.clone({:quiet => false, :verbose => true, :progress => true, :branch => 'master'}, project.repo_url, ".projects/#{project.name}")
-
-      if !File.directory?(".projects/#{project.name}/.git")
-        false
+      if exit_status
+        if !File.directory?(".projects/#{project.name}/.git")
+          false
+        else
+          if Dir.entries(".projects/#{project.name}") == [".", "..", ".git"]
+            false
+          else
+            true
+          end
+        end
       else
-        true
+        false
       end
     end
 
@@ -21,8 +27,9 @@ module DeepThought
         end
       end
 
+      system "cd ./.projects/#{project.name} && git fetch --all > /dev/null 2>&1"
+
       repo = Grit::Repo.new(".projects/#{project.name}")
-      repo.git.fetch
       repo.commits("origin/#{branch}", 1)
     end
   end
