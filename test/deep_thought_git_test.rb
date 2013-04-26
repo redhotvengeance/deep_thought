@@ -3,16 +3,6 @@ require File.expand_path '../test_helper.rb', __FILE__
 class DeepThoughtGitTest < MiniTest::Unit::TestCase
   def setup
     @project = DeepThought::Project.new(:name => '_test', :deploy_type => 'capy')
-
-    if File.directory?(".projects/#{@project.name}")
-      FileUtils.rm_rf(".projects/#{@project.name}")
-    end
-  end
-
-  def teardown
-    if File.directory?(".projects/#{@project.name}")
-      FileUtils.rm_rf(".projects/#{@project.name}")
-    end
   end
 
   def test_git_setup_failed

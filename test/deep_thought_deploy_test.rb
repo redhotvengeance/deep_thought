@@ -6,30 +6,6 @@ DatabaseCleaner.strategy = :transaction
 class DeepThoughtDeployTest < MiniTest::Unit::TestCase
   include Rack::Test::Methods
 
-  def setup
-    DatabaseCleaner.start
-
-    if File.directory?(".projects/test-no-branch")
-      FileUtils.rm_rf(".projects/test-no-branch")
-    end
-
-    if File.directory?(".projects/test-no-repo")
-      FileUtils.rm_rf(".projects/test-no-repo")
-    end
-  end
-
-  def teardown
-    if File.directory?(".projects/test-no-branch")
-      FileUtils.rm_rf(".projects/test-no-branch")
-    end
-
-    if File.directory?(".projects/test-no-repo")
-      FileUtils.rm_rf(".projects/test-no-repo")
-    end
-
-    DatabaseCleaner.clean
-  end
-
   def app
     DeepThought.app
   end
@@ -64,15 +40,15 @@ class DeepThoughtDeployTest < MiniTest::Unit::TestCase
   end
 
   def test_deploy_no_repo
-    project = DeepThought::Project.create(:name => 'test-no-repo', :repo_url => 'http://fake.url', :deploy_type => 'capy')
-    post '/deploy/test-no-repo'
+    project = DeepThought::Project.create(:name => '_test', :repo_url => 'http://fake.url', :deploy_type => 'capy')
+    post '/deploy/_test'
     assert !last_response.ok?
     assert_equal "Woah - I can't seem to access that repo. Are you sure the URL is correct and that I have access to it?", last_response.body
   end
 
   def test_deploy_no_branch
-    project = DeepThought::Project.create(:name => 'test-no-branch', :repo_url => './test/fixtures/test', :deploy_type => 'capy')
-    post '/deploy/test-no-branch', params={:branch => 'no-branch'}
+    project = DeepThought::Project.create(:name => '_test', :repo_url => './test/fixtures/test', :deploy_type => 'capy')
+    post '/deploy/_test', params={:branch => 'no-branch'}
     assert !last_response.ok?
     assert_equal "Hmm, that branch doesn't appear to exist. Have you pushed it?", last_response.body
   end
