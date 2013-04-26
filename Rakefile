@@ -5,7 +5,7 @@ require "./lib/deep_thought"
 
 task :environment => :dotenv do
   puts "RACK_ENV: #{ENV['RACK_ENV']}"
-  
+
   DeepThought.setup(ENV)
 end
 

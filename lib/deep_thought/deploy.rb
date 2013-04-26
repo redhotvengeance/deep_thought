@@ -1,5 +1,6 @@
 require "sinatra"
 require "deep_thought/git"
+require "deep_thought/deployer"
 
 module DeepThought
   class Deploy < Sinatra::Base
@@ -14,9 +15,9 @@ module DeepThought
     post '/:app' do
       app = params[:app]
       branch = params[:branch] || 'master'
-      action = params[:action]
-      environment = params[:environment]
-      server = params[:server]
+      actions = params[:actions].split(',') if params[:actions]
+      environment = params[:environment] if params[:environment]
+      box = params[:box] if params[:box]
 
       project = Project.find_by_name(app)
 
@@ -30,35 +31,39 @@ module DeepThought
         return [500, "Woah - I can't seem to access that repo. Are you sure the URL is correct and that I have access to it?"]
       end
 
-      hash = Git.get_latest_commit_for_branch(project, branch)[0]
+      hash = hashes[0]
 
       if !hash
         return [500, "Hmm, that branch doesn't appear to exist. Have you pushed it?"]
       end
 
-      command = "executing deploy"
+      parameters = Hash["branch", branch]
 
-      if action
-        command += "/#{action}"
-      end
+      response = "executing deploy"
 
-      command += " #{app}"
+      if actions
+        parameters["actions"] = actions
 
-      if branch
-        command += "/#{branch}"
-      end
-
-      command += " #{hash}"
-
-      if environment
-        command += " to #{environment}"
-
-        if server
-          command += "/#{server}"
+        actions.each do |action|
+          response += "/#{action}"
         end
       end
 
-      command
+      response += " #{app}/#{branch}/#{hash}"
+
+      if environment
+        parameters["env"] = environment
+        response += " to #{environment}"
+
+        if box
+          parameters["box"] = box
+          response += "/#{box}"
+        end
+      end
+
+      DeepThought::Deployer.execute(project, parameters)
+
+      response
     end
 
     post '/setup/:app' do

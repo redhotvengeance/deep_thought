@@ -3,6 +3,8 @@ require "active_record"
 require "deep_thought/app"
 require "deep_thought/deploy"
 require "deep_thought/models/project"
+require "deep_thought/deployer"
+require "deep_thought/deployer/capistrano"
 require "deep_thought/version"
 
 module DeepThought
@@ -38,4 +40,6 @@ module DeepThought
       end
     }
   end
+
+  DeepThought::Deployer.register_adapter('capistrano', DeepThought::Deployer::Capistrano)
 end

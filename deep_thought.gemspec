@@ -27,6 +27,8 @@ Gem::Specification.new do |gem|
   gem.add_development_dependency "thin", "~>1.5"
   gem.add_development_dependency "tux", "~>0.3"
   gem.add_development_dependency "dotenv", "~>0.6"
+  gem.add_dependency "capistrano", "~>2.14"
+  gem.add_dependency "railsless-deploy", "~>1.1"
 
   # testing
   gem.add_development_dependency "minitest", "~>4.7"

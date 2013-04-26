@@ -1,8 +1,5 @@
 require File.expand_path '../test_helper.rb', __FILE__
 
-DatabaseCleaner.clean_with(:truncation)
-DatabaseCleaner.strategy = :transaction
-
 class DeepThoughtDeployTest < MiniTest::Unit::TestCase
   include Rack::Test::Methods
 
@@ -47,7 +44,7 @@ class DeepThoughtDeployTest < MiniTest::Unit::TestCase
   end
 
   def test_deploy_no_branch
-    project = DeepThought::Project.create(:name => '_test', :repo_url => './test/fixtures/test', :deploy_type => 'capy')
+    project = DeepThought::Project.create(:name => '_test', :repo_url => './test/fixtures/git-test', :deploy_type => 'capy')
     post '/deploy/_test', params={:branch => 'no-branch'}
     assert !last_response.ok?
     assert_equal "Hmm, that branch doesn't appear to exist. Have you pushed it?", last_response.body
