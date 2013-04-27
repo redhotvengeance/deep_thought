@@ -25,4 +25,9 @@ class DeepThoughtDeployerTest < MiniTest::Unit::TestCase
     DeepThought::Deployer.register_adapter('mock', deployer)
     assert_raises(DeepThought::Deployer::DeploymentFailedError) { DeepThought::Deployer.execute(@project, {"branch" => "master"}) }
   end
+
+  def test_deployer_lock
+    DeepThought::Deployer.lock_deployer
+    assert_raises(DeepThought::Deployer::DeploymentInProgressError) { DeepThought::Deployer.execute(@project, {"branch" => "master"}) }
+  end
 end
