@@ -15,7 +15,7 @@ module DeepThought
     end
 
     def self.execute(project, params)
-      if !is_deploying
+      if !is_deploying?
         Git.switch_to_branch(project, params['branch'])
 
         if @adapters.keys.include?(project['deploy_type'])
@@ -40,7 +40,7 @@ module DeepThought
       end
     end
 
-    def self.is_deploying
+    def self.is_deploying?
       deployer_state = get_or_create_deployer_state
 
       if deployer_state.state == 'true'
