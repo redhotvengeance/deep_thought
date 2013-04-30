@@ -2,6 +2,7 @@ require File.expand_path '../test_helper.rb', __FILE__
 
 class DeepThoughtDeployerTest < MiniTest::Unit::TestCase
   def setup
+    DeepThought::Deployer.adapters = {}
     @project = DeepThought::Project.new(:name => '_test', :repo_url => './test/fixtures/git-test', :deploy_type => 'mock')
   end
 

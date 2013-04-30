@@ -6,6 +6,10 @@ module DeepThought
     class DeploymentFailedError < StandardError; end
     class DeploymentInProgressError < StandardError; end
 
+    class << self
+      attr_accessor :adapters
+    end
+
     def self.adapters
       @adapters ||= {}
     end
