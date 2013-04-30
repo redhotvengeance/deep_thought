@@ -30,6 +30,10 @@ module DeepThought
     }
 
     ActiveRecord::Base.establish_connection(connection)
+
+    if settings['CI_SERVICE']
+      DeepThought::CIService.setup(settings)
+    end
   end
 
   def self.app

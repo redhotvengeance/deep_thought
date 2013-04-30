@@ -37,6 +37,10 @@ module DeepThought
         return [500, "Hmm, that branch doesn't appear to exist. Have you pushed it?"]
       end
 
+      if DeepThought::CIService.ci_service
+        DeepThought::CIService.is_branch_green?(app, branch, hash)
+      end
+
       parameters = Hash["branch", branch]
 
       response = "executing deploy"
