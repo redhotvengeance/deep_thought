@@ -4,6 +4,7 @@ require "deep_thought/app"
 require "deep_thought/deploy"
 require "deep_thought/models/project"
 require "deep_thought/models/state"
+require "deep_thought/models/user"
 require "deep_thought/deployer"
 require "deep_thought/deployer/capistrano"
 require 'deep_thought/ci_service'

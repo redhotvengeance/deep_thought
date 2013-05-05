@@ -10,6 +10,16 @@ task :environment => :dotenv do
   DeepThought.setup(ENV)
 end
 
+task :create_user, [:email, :password] => [:environment] do |t, args|
+  user = DeepThought::User.create(:email => "#{args[:email]}", :password => "#{args[:password]}", :password_confirmation => "#{args[:password]}")
+
+  if user.errors.count > 0
+    puts "Error when creating new user: #{user.errors.messages}"
+  else
+    puts "Created new user with email: #{user.email}."
+  end
+end
+
 namespace :db do
   desc "Migrate the database"
   task :migrate => :environment do

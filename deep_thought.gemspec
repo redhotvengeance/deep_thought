@@ -22,6 +22,7 @@ Gem::Specification.new do |gem|
   gem.add_dependency "pg", "~>0.15"
   gem.add_dependency "grit", "~>2.5"
   gem.add_dependency "httparty", "~>0.11"
+  gem.add_dependency "bcrypt-ruby", "~>3.0"
 
   # development
   gem.add_development_dependency "shotgun", "~>0.9"
