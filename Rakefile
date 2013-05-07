@@ -1,10 +1,14 @@
 require "bundler/gem_tasks"
-require 'dotenv/tasks'
+require "dotenv/tasks"
 require "active_record"
-require 'fileutils'
+require "fileutils"
 require "./lib/deep_thought"
 
-task :environment => :dotenv do
+task :environment, [:env] => :dotenv do |t, args|
+  if args[:env]
+    ENV['RACK_ENV'] = args[:env]
+  end
+
   puts "RACK_ENV: #{ENV['RACK_ENV']}"
 
   DeepThought.setup(ENV)
@@ -22,23 +26,23 @@ end
 
 namespace :db do
   desc "Migrate the database"
-  task :migrate => :environment do
+  task :migrate, [:env] => :environment do |t, args|
     ActiveRecord::Migrator.migrate('db/migrate')
   end
 
   desc "Rolls the schema back to the previous version"
-  task :rollback => :environment do
+  task :rollback, [:env] => :environment do |t, args|
     ActiveRecord::Migrator.rollback('db/migrate', 1)
   end
 
   desc 'Reset the database'
-  task :reset => :environment do
+  task :reset, [:env] => :environment do |t, args|
     ActiveRecord::Migrator.down('db/migrate')
     ActiveRecord::Migrator.migrate('db/migrate')
   end
 
   desc 'Output the schema to db/schema.rb'
-  task :schema => :environment do
+  task :schema, [:env] => :environment do |t, args|
     File.open('db/schema.rb', 'w') do |f|
       ActiveRecord::SchemaDumper.dump(ActiveRecord::Base.connection, f)
     end
