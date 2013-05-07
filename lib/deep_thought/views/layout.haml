@@ -1,0 +1,29 @@
+!!! 5
+%html
+  %head
+    %title Deep Thought
+    %meta{:charset => 'utf-8'}
+    %meta{:name => 'robots', :content => 'noindex'}
+    %link{:href => 'https://fonts.googleapis.com/css?family=Noto+Sans:400,700|Droid+Sans+Mono', :rel => 'stylesheet', :type => 'text/css'}
+    %link{:href => '/assets/stylesheets/main.css', :rel => 'stylesheet', :type => 'text/css'}
+    %meta{:name => 'viewport', :content => 'user-scalable=0, initial-scale=1.0'}
+  %body
+    %header
+      %nav
+        - if current_user
+          %ul
+            %li
+              %a{:href => "/", :class => current_route('projects')} projects
+            %li
+              %a{:href => "/users", :class => current_route('users')} users
+            %li
+              %a{:href => "/users/#{@current_user.id}", :class => current_route('me')} me
+            %li
+              %form{:class => 'logout', :"accept-charset" => "UTF-8", :action => "/logout", :method => "POST"}
+                = csrf_tag
+                %input{:type => 'hidden', :name => "_method", :value => "delete"}
+                %input{:type => "submit", :value => "logout"}
+      .deep-thought
+        %h1= settings.deep_thought_message
+    .content
+      = yield

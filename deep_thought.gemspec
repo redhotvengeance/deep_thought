@@ -23,6 +23,9 @@ Gem::Specification.new do |gem|
   gem.add_dependency "grit", "~>2.5"
   gem.add_dependency "httparty", "~>0.11"
   gem.add_dependency "bcrypt-ruby", "~>3.0"
+  gem.add_dependency "rack-ssl", "~>1.3"
+  gem.add_dependency "rack_csrf", "~>2.4"
+  gem.add_dependency "haml", "~>4.0"
 
   # development
   gem.add_development_dependency "shotgun", "~>0.9"
@@ -37,4 +40,5 @@ Gem::Specification.new do |gem|
   gem.add_development_dependency "mocha", "~>0.13"
   gem.add_development_dependency "database_cleaner", "~>0.9"
   gem.add_development_dependency "turn", "~>0.9"
+  gem.add_development_dependency "capybara", "~>2.1"
 end

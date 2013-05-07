@@ -1,0 +1,5 @@
+%form{:"accept-charset" => "UTF-8", :action => "/login", :method => "POST"}
+  = csrf_tag
+  %input{:id => "email", :name => "email", :placeholder => "your@email.here", :type => "text"}
+  %input{:id => "password", :name => "password", :placeholder => "password", :type => "password"}
+  %input{:class => "button", :type => "submit", :value => "login"}

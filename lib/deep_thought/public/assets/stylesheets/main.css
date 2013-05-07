@@ -1,0 +1,276 @@
+/* RESET */
+
+/* http://meyerweb.com/eric/tools/css/reset/
+   v2.0 | 20110126
+   License: none (public domain)
+*/
+
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed,
+figure, figcaption, footer, header, hgroup,
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font: inherit;
+  vertical-align: baseline;
+}
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure,
+footer, header, hgroup, menu, nav, section {
+  display: block;
+}
+body {
+  line-height: 1;
+}
+ol, ul {
+  list-style: none;
+}
+blockquote, q {
+  quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+  content: '';
+  content: none;
+}
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+/* BASE */
+
+* {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  -webkit-appearance: none;
+}
+
+html {
+  font-size: 100%;
+  height: 100%;
+}
+
+body {
+  height: 100%;
+  min-width: 320px;
+  background-color: #fdfdfd;
+  font-family: 'Noto Sans', sans-serif;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 16px;
+  font-size: 1rem;
+  -webkit-font-smoothing: antialiased;
+  font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Droid Sans Mono', sans-serif;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 20px;
+  font-size: 1.25rem;
+  color: #fff;
+  opacity: .3;
+}
+
+p {
+  font-family: 'Noto Sans', sans-serif;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 16px;
+  font-size: 1rem;
+  color: #666;
+}
+
+a {
+  font-family: 'Noto Sans', sans-serif;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 16px;
+  font-size: 1rem;
+  color: #333;
+  text-decoration: none;
+}
+
+span {
+  font-family: 'Noto Sans', sans-serif;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 16px;
+  font-size: 1rem;
+  color: #666;
+}
+
+input {
+  display: block;
+  width: 100%;
+  height: 60px;
+  border: none;
+  background-color: #ebedf2;
+  color: #666;
+  font-family: 'Droid Sans Mono', sans-serif;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 22px;
+  font-size: 1.375rem;
+  margin-bottom: 5px;
+  text-align: center;
+}
+
+input, textarea, select {
+  -webkit-border-radius: 0;
+  border-radius: 0;
+  -webkit-appearance: none;
+}
+
+/* LAYOUT */
+
+.content {
+  max-width: 620px;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+}
+
+nav > ul > li {
+  width: 25%;
+}
+
+/* MODULES */
+
+.button {
+  background-color: #626673;
+  color: #fdfdfd;
+  font-family: 'Noto Sans', sans-serif;
+  cursor: pointer;
+}
+
+.button:hover {
+  background-color: #575a66;
+}
+
+nav {
+  max-width: 620px;
+  height: 35px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+nav > ul > li {
+  width: 25%;
+  height: 35px;
+  float: left;
+  border-right: 1px solid #fdfdfd;
+  text-align: center;
+}
+
+nav > ul > li > a {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background-color: #ebedf2;
+  color: #8f9092;
+  font-size: 15px;
+  font-size: .9375rem;
+  line-height: 32px;
+  line-height: 2rem;
+}
+
+nav > ul > li > a.current, nav > ul > li > a:hover {
+  background-color: #d2d4d9;
+  color: #333;
+}
+
+.logout {
+  width: 100%;
+  height: 35px;
+  float: left;
+  text-align: center;
+}
+
+.logout > input {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background-color: #ebedf2;
+  color: #8f9092;
+  font-family: 'Noto Sans', sans-serif;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  font-size: .875rem;
+  line-height: 32px;
+  line-height: 2rem;
+  cursor: pointer;
+}
+
+.logout > input:hover {
+  background-color: #d2d4d9;
+  color: #333;
+}
+
+.deep-thought {
+  width: 100%;
+  background-color: #363840;
+  text-align: center;
+  margin-bottom: 50px;
+  padding: 20px;
+}
+
+
+.list {
+  max-width: 620px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.list > li {
+  display: block;
+  width: 100%;
+  margin-bottom: 5px;
+}
+
+.list > li > p, .list > li > a {
+  display: block;
+  width: 100%;
+  min-height: 60px;
+  background-color: #d2d4d9;
+  color: #666;
+  font-family: 'Noto Sans', sans-serif;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 22px;
+  font-size: 1.375rem;
+  line-height: 27.2px;
+  line-height: 1.7rem;
+  padding-top: 15px;
+  padding-bottom: 18px;
+  padding-left: 20px;
+  padding-right: 20px;
+  text-align: center;
+}
+
+.list > li > a:hover {
+  background-color: #c6c8cc;
+}
+
+.list > li:nth-child(2n) > a {
+  background-color: #ebedf2;
+}
+
+.list > li:nth-child(2n) > a:hover {
+  background-color: #dfe1e5;
+}
