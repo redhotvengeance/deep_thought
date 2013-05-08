@@ -29,9 +29,13 @@ module DeepThought
     get '/' do
       projects = DeepThought::Project.all
 
-      settings.deep_thought_message = "Deep Thought has the answer."
+      if projects.count > 0
+        settings.deep_thought_message = "Deep Thought has the answer."
+      else
+        settings.deep_thought_message = "Deep Thought knows of no projects."
+      end
 
-      haml :"home/index", :locals => {:projects => projects}
+      haml :"projects/index", :locals => {:projects => projects}
     end
 
     get '/login' do
@@ -39,7 +43,7 @@ module DeepThought
         redirect '/'
       end
 
-      haml :"home/login"
+      haml :"sessions/login"
     end
 
     post '/login' do

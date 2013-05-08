@@ -1,7 +1,0 @@
-- if projects.count > 0
-  %ul.list
-    - projects.each do |project|
-      %li
-        %a{:href => "/projects/#{project.name}"}= project.name
-- else
-  %p Deep Thought knows of no projects.

@@ -69,8 +69,10 @@ body {
   font-family: 'Noto Sans', sans-serif;
   font-style: normal;
   font-weight: 400;
-  font-size: 16px;
-  font-size: 1rem;
+  font-size: 18px;
+  font-size: 1.125rem;
+  line-height: 24px;
+  line-height: 1.5rem;
   -webkit-font-smoothing: antialiased;
   font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
@@ -90,8 +92,10 @@ p {
   font-family: 'Noto Sans', sans-serif;
   font-style: normal;
   font-weight: 400;
-  font-size: 16px;
-  font-size: 1rem;
+  font-size: 18px;
+  font-size: 1.125rem;
+  line-height: 24px;
+  line-height: 1.5rem;
   color: #666;
 }
 
@@ -99,8 +103,10 @@ a {
   font-family: 'Noto Sans', sans-serif;
   font-style: normal;
   font-weight: 400;
-  font-size: 16px;
-  font-size: 1rem;
+  font-size: 18px;
+  font-size: 1.125rem;
+  line-height: 24px;
+  line-height: 1.5rem;
   color: #333;
   text-decoration: none;
 }
@@ -109,8 +115,10 @@ span {
   font-family: 'Noto Sans', sans-serif;
   font-style: normal;
   font-weight: 400;
-  font-size: 16px;
-  font-size: 1rem;
+  font-size: 18px;
+  font-size: 1.125rem;
+  line-height: 24px;
+  line-height: 1.5rem;
   color: #666;
 }
 
@@ -124,8 +132,10 @@ input {
   font-family: 'Droid Sans Mono', sans-serif;
   font-style: normal;
   font-weight: 400;
-  font-size: 22px;
-  font-size: 1.375rem;
+  font-size: 18px;
+  font-size: 1.125rem;
+  line-height: 24px;
+  line-height: 1.5rem;
   margin-bottom: 5px;
   text-align: center;
 }
@@ -161,8 +171,8 @@ nav > ul > li {
   font-weight: 400;
   font-size: 18px;
   font-size: 1.125rem;
-  line-height: 27.2px;
-  line-height: 1.7rem;
+  line-height: 24px;
+  line-height: 1.5rem;
   padding-top: 18px;
   padding-bottom: 15px;
   padding-left: 20px;
@@ -264,11 +274,11 @@ nav > ul > li > a.current, nav > ul > li > a:hover {
   font-family: 'Noto Sans', sans-serif;
   font-style: normal;
   font-weight: 400;
-  font-size: 22px;
-  font-size: 1.375rem;
-  line-height: 27.2px;
-  line-height: 1.7rem;
-  padding-top: 15px;
+  font-size: 18px;
+  font-size: 1.125rem;
+  line-height: 24px;
+  line-height: 1.5rem;
+  padding-top: 18px;
   padding-bottom: 18px;
   padding-left: 20px;
   padding-right: 20px;
@@ -297,8 +307,8 @@ nav > ul > li > a.current, nav > ul > li > a:hover {
   font-weight: 400;
   font-size: 18px;
   font-size: 1.125rem;
-  line-height: 27.2px;
-  line-height: 1.7rem;
+  line-height: 24px;
+  line-height: 1.5rem;
   margin-bottom: 5px;
   padding-top: 18px;
   padding-bottom: 15px;
