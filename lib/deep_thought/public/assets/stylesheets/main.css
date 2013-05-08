@@ -274,3 +274,27 @@ nav > ul > li > a.current, nav > ul > li > a:hover {
 .list > li:nth-child(2n) > a:hover {
   background-color: #dfe1e5;
 }
+
+.box {
+  display: block;
+  max-width: 620px;
+  min-height: 60px;
+  background-color: #d2d4d9;
+  font-family: 'Noto Sans', sans-serif;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 18px;
+  font-size: 1.125rem;
+  line-height: 27.2px;
+  line-height: 1.7rem;
+  margin-bottom: 5px;
+  padding-top: 18px;
+  padding-bottom: 15px;
+  padding-left: 20px;
+  padding-right: 20px;
+  word-break: break-all;
+}
+
+.user-api-key {
+  margin-top: 70px;
+}

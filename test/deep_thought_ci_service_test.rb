@@ -2,8 +2,14 @@ require File.expand_path '../test_helper.rb', __FILE__
 
 class DeepThoughtCIServiceTest < MiniTest::Unit::TestCase
   def setup
+    DatabaseCleaner.start
+
     DeepThought::CIService.adapters = {}
     DeepThought::CIService.ci_service = nil
+  end
+
+  def teardown
+    DatabaseCleaner.clean
   end
 
   def test_no_ci_service

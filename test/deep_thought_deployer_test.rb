@@ -2,8 +2,14 @@ require File.expand_path '../test_helper.rb', __FILE__
 
 class DeepThoughtDeployerTest < MiniTest::Unit::TestCase
   def setup
+    DatabaseCleaner.start
+
     DeepThought::Deployer.adapters = {}
     @project = DeepThought::Project.new(:name => '_test', :repo_url => './test/fixtures/git-test', :deploy_type => 'mock')
+  end
+
+  def teardown
+    DatabaseCleaner.clean
   end
 
   def test_deployer_not_found

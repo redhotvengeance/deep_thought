@@ -1,4 +1,6 @@
 require 'bcrypt'
+require 'securerandom'
+require 'base64'
 
 module DeepThought
   class User < ActiveRecord::Base
@@ -12,6 +14,7 @@ module DeepThought
     validates_presence_of :password, :on => :create
     validates_presence_of :password_confirmation, :on => :create
     validates_confirmation_of :password
+    validates_uniqueness_of :api_key, :allow_nil => true
 
     def self.authenticate(email, unencrypted_password)
       user = find_by_email(email)
@@ -21,6 +24,12 @@ module DeepThought
       else
         nil
       end
+    end
+
+    def generate_api_key
+      uuid = SecureRandom.uuid
+      self.api_key = Base64.encode64(uuid)
+      self.save!
     end
 
     private

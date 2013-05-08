@@ -1,11 +1,22 @@
 - if current_user.id == user.id
-  %form{:"accept-charset" => "UTF-8", :action => "/users/#{user.id}", :method => "POST"}
-    = csrf_tag
-    %input{:type => 'hidden', :name => "_method", :value => "put"}
-    %input{:id => "email", :name => "user[email]", :value => user.email, :type => "text"}
-    %input{:id => "password", :name => "user[password]", :placeholder => "new password", :type => "password"}
-    %input{:id => "password_confirmation", :name => "user[password_confirmation]", :placeholder => "confirm password", :type => "password"}
-    %input{:class => "button", :type => "submit", :value => "update"}
+  .user-info
+    %form{:"accept-charset" => "UTF-8", :action => "/users/#{user.id}", :method => "POST"}
+      = csrf_tag
+      %input{:type => 'hidden', :name => "_method", :value => "put"}
+      %input{:id => "email", :name => "user[email]", :value => user.email, :type => "text"}
+      %input{:id => "password", :name => "user[password]", :placeholder => "new password", :type => "password"}
+      %input{:id => "password_confirmation", :name => "user[password_confirmation]", :placeholder => "confirm password", :type => "password"}
+      %input{:class => "button", :type => "submit", :value => "update"}
+
+  .user-api-key
+    - if current_user.api_key
+      %span.box= current_user.api_key
+    - else
+      %span.box no api key (yet)
+
+    %form{:"accept-charset" => "UTF-8", :action => "/users/#{user.id}/key", :method => "POST"}
+      = csrf_tag
+      %input{:class => "button", :type => "submit", :value => "generate new api key"}
 - else
   %ul.list
     %li

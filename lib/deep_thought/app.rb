@@ -96,6 +96,14 @@ module DeepThought
       end
     end
 
+    post '/users/:id/key' do
+      user = DeepThought::User.find(params[:id])
+
+      user.generate_api_key
+
+      redirect "/users/#{params[:id]}"
+    end
+
     get '*' do
       redirect '/'
     end

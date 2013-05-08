@@ -2,7 +2,13 @@ require File.expand_path '../test_helper.rb', __FILE__
 
 class DeepThoughtJankyTest < MiniTest::Unit::TestCase
   def setup
+    DatabaseCleaner.start
+
     @janky = DeepThought::CIService::Janky.new
+  end
+
+  def teardown
+    DatabaseCleaner.clean
   end
 
   def test_janky_setup_success

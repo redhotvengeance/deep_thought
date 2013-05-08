@@ -3,6 +3,22 @@ require File.expand_path '../test_helper.rb', __FILE__
 class DeepThoughtDeployTest < MiniTest::Unit::TestCase
   include Rack::Test::Methods
 
+  def setup
+    DatabaseCleaner.start
+
+    if File.directory?(".projects/_test")
+      FileUtils.rm_rf(".projects/_test")
+    end
+  end
+
+  def teardown
+    if File.directory?(".projects/_test")
+      FileUtils.rm_rf(".projects/_test")
+    end
+
+    DatabaseCleaner.clean
+  end
+
   def app
     DeepThought.app
   end

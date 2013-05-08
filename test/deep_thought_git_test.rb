@@ -2,7 +2,21 @@ require File.expand_path '../test_helper.rb', __FILE__
 
 class DeepThoughtGitTest < MiniTest::Unit::TestCase
   def setup
+    DatabaseCleaner.start
+
+    if File.directory?(".projects/_test")
+      FileUtils.rm_rf(".projects/_test")
+    end
+
     @project = DeepThought::Project.new(:name => '_test', :repo_url => './test/fixtures/git-test', :deploy_type => 'capy')
+  end
+
+  def teardown
+    if File.directory?(".projects/_test")
+      FileUtils.rm_rf(".projects/_test")
+    end
+
+    DatabaseCleaner.clean
   end
 
   def test_git_setup_failed
