@@ -1,9 +1,27 @@
 require "sinatra"
+require 'rack/ssl'
 require "deep_thought/git"
 require "deep_thought/deployer"
 
 module DeepThought
   class Deploy < Sinatra::Base
+    if ENV['RACK_ENV'] != 'development' && ENV['RACK_ENV'] != 'test'
+      use Rack::SSL
+    end
+
+    before '*' do
+      if request.env['HTTP_AUTHORIZATION'] =~ /Token token="[a-zA-Z0-9\+=]+"/
+        token = request.env['HTTP_AUTHORIZATION'].gsub(/Token token="/, '').gsub(/"/, '')
+        @user = DeepThought::User.find_by_api_key("#{token}")
+
+        if !@user
+          halt 401
+        end
+      else
+        halt 401
+      end
+    end
+
     get '*' do
       [401, "I don't got what you're trying to GET."]
     end

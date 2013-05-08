@@ -28,7 +28,7 @@ module DeepThought
 
     def generate_api_key
       uuid = SecureRandom.uuid
-      self.api_key = Base64.encode64(uuid)
+      self.api_key = Base64.strict_encode64(uuid)
       self.save!
     end
 
