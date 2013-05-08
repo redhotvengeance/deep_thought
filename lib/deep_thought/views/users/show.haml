@@ -21,3 +21,10 @@
   %ul.list
     %li
       %p= user.email
+
+  .delete-user
+    //%a.button{:href => '/users/new'} delete
+    %form{:"accept-charset" => "UTF-8", :action => "/users/#{user.id}", :method => "POST"}
+      = csrf_tag
+      %input{:type => 'hidden', :name => "_method", :value => "delete"}
+      %input{:class => "button", :type => "submit", :value => "delete user"}

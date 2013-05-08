@@ -54,7 +54,7 @@ class DeepThoughtAppTest < MiniTest::Unit::TestCase
     assert_equal "http://www.example.com/login", page.current_url
   end
 
-  def test_user_generate_api_key
+  def test_app_user_generate_api_key
     login(@user_email, @user_password)
 
     visit "/users/#{@user.id}"
@@ -72,5 +72,43 @@ class DeepThoughtAppTest < MiniTest::Unit::TestCase
 
     assert_equal "http://www.example.com/users/#{@user.id}", page.current_url
     assert page.has_content?('12345')
+  end
+
+  def test_app_add_user
+    login(@user_email, @user_password)
+
+    visit "/users/new"
+    within(".content > form") do
+      fill_in 'email', :with => 'new@user.email'
+      fill_in 'password', :with => 'secret'
+      fill_in 'password_confirmation', :with => 'secret'
+      click_button 'create user'
+    end
+
+    assert_equal "http://www.example.com/users", page.current_url
+    assert page.has_content?('new@user.email')
+  end
+
+  def test_app_delete_user
+    login(@user_email, @user_password)
+
+    visit "/users/new"
+    within(".content > form") do
+      fill_in 'email', :with => 'new@user.email'
+      fill_in 'password', :with => 'secret'
+      fill_in 'password_confirmation', :with => 'secret'
+      click_button 'create user'
+    end
+
+    assert page.has_content?('new@user.email')
+
+    within(".list") do
+      click_link 'new@user.email'
+    end
+
+    click_button 'delete user'
+
+    assert_equal "http://www.example.com/users", page.current_url
+    assert !page.has_content?('new@user.email')
   end
 end

@@ -8,6 +8,7 @@ module DeepThought
     set :root, File.dirname(__FILE__)
     set :public_folder, File.join(root, 'public')
     set :views, File.join(root, 'views')
+    set :haml, :layout => :"layouts/layout"
 
     if ENV['RACK_ENV'] != 'development' && ENV['RACK_ENV'] != 'test'
       use Rack::SSL
@@ -30,7 +31,7 @@ module DeepThought
 
       settings.deep_thought_message = "Deep Thought has the answer."
 
-      haml :index, :locals => {:projects => projects}
+      haml :"home/index", :locals => {:projects => projects}
     end
 
     get '/login' do
@@ -38,7 +39,7 @@ module DeepThought
         redirect '/'
       end
 
-      haml :login
+      haml :"home/login"
     end
 
     post '/login' do
@@ -62,7 +63,7 @@ module DeepThought
 
       settings.deep_thought_message = "Now pondering: #{project.name}."
 
-      haml :project, :locals => {:project => project}
+      haml :"projects/index", :locals => {:project => project}
     end
 
     get '/project/:name' do
@@ -74,7 +75,24 @@ module DeepThought
 
       settings.deep_thought_message = "Deep Thought loves you."
 
-      haml :users, :locals => {:users => users}
+      haml :"users/index", :locals => {:users => users}
+    end
+
+    get '/users/new' do
+      user = DeepThought::User.new
+
+      haml :"users/new", :locals => {:user => user}
+    end
+
+    post '/users/new' do
+      user = DeepThought::User.new(params[:user])
+
+      if user.save
+        redirect '/users'
+      else
+        settings.deep_thought_message = "Deep Thought has a problem with your request."
+        haml :"users/new", :locals => {:user => user}
+      end
     end
 
     get '/users/:id' do
@@ -82,7 +100,7 @@ module DeepThought
 
       settings.deep_thought_message = "Deep Thought loves you."
 
-      haml :user, :locals => {:user => user}
+      haml :"users/show", :locals => {:user => user}
     end
 
     put '/users/:id' do
@@ -92,8 +110,16 @@ module DeepThought
         redirect '/users'
       else
         settings.deep_thought_message = "Deep Thought has a problem with your request."
-        haml :user, :locals => {:user => user}
+        haml :"users/show", :locals => {:user => user}
       end
+    end
+
+    delete '/users/:id' do
+      user = DeepThought::User.find(params[:id])
+
+      user.destroy
+
+      redirect '/users'
     end
 
     post '/users/:id/key' do
