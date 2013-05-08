@@ -61,7 +61,7 @@ namespace :db do
     FileUtils.mkdir_p(migrations_dir)
 
     open(File.join(migrations_dir, filename), 'w') do |f|
-      f << (<<-EOS).gsub("        ", "")
+      f << (<<-EOS).gsub("      ", "")
       class #{migration_name} < ActiveRecord::Migration
         def up
         end
