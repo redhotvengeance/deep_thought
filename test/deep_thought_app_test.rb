@@ -33,7 +33,6 @@ class DeepThoughtAppTest < MiniTest::Unit::TestCase
   def test_app_root_logged_in
     login(@user_email, @user_password)
 
-    visit '/'
     assert_equal page.status_code, 200
     assert_equal "http://www.example.com/", page.current_url
   end
@@ -41,13 +40,10 @@ class DeepThoughtAppTest < MiniTest::Unit::TestCase
   def test_app_logout
     login(@user_email, @user_password)
 
-    visit '/'
     assert_equal page.status_code, 200
     assert_equal "http://www.example.com/", page.current_url
 
-    within(".logout") do
-      click_button 'logout'
-    end
+    logout
 
     visit '/'
     assert_equal page.status_code, 200
@@ -72,6 +68,13 @@ class DeepThoughtAppTest < MiniTest::Unit::TestCase
 
     assert_equal "http://www.example.com/users/#{@user.id}", page.current_url
     assert page.has_content?('12345')
+
+    logout
+
+    login(@user_email, @user_password)
+
+    assert_equal page.status_code, 200
+    assert_equal "http://www.example.com/", page.current_url
   end
 
   def test_app_add_user
@@ -110,5 +113,26 @@ class DeepThoughtAppTest < MiniTest::Unit::TestCase
 
     assert_equal "http://www.example.com/users", page.current_url
     assert !page.has_content?('new@user.email')
+  end
+
+  def test_app_user_update_email
+    login(@user_email, @user_password)
+
+    within("nav") do
+      click_link "me"
+    end
+
+    within(".user-info > form") do
+      fill_in 'email', :with => 'new@user.email'
+      click_button 'update'
+    end
+
+    assert page.has_content?('new@user.email')
+
+    logout
+
+    login('new@user.email', @user_password)
+
+    assert_equal "http://www.example.com/", page.current_url
   end
 end

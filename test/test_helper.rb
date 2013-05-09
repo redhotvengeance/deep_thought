@@ -30,3 +30,9 @@ def login(email, password)
     click_button 'login'
   end
 end
+
+def logout
+  within(".logout") do
+    click_button "logout"
+  end
+end
