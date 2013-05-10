@@ -1,28 +1,42 @@
 module DeepThought
   module Deployer
     class Capistrano
-      def execute(project, params)
+      def execute(deploy)
         cap_command = "cap "
 
-        cap_command += "#{params['env']} " if params['env']
+        cap_command += "#{deploy.environment} " if deploy.environment
 
         cap_command += "deploy"
 
-        if params['actions']
-          params['actions'].each do |action|
+        if deploy.actions
+          actions = YAML.load(deploy.actions)
+          actions.each do |action|
             cap_command += ":#{action}"
           end
         end
 
-        cap_command += " -s branch=#{params['branch']}" if params['branch']
-        cap_command += " -s box=#{params['box']}" if params['box']
+        cap_command += " -s branch=#{deploy.branch}"
+        cap_command += " -s box=#{deploy.box}" if deploy.box
+
+        if deploy.variables
+          variables = YAML.load(deploy.variables)
+          variables.each do |k, v|
+            cap_command += " -s #{k}=#{v}"
+          end
+        end
 
         commands = []
 
-        commands << "cd ./.projects/#{project.name}"
-        commands << "#{cap_command} > /dev/null 2>&1"
+        commands << "cd ./.projects/#{deploy.project.name}"
+        commands << "#{cap_command} 2>&1"
 
-        system "#{commands.join(" && ")}"
+        command = commands.join(" && ")
+
+        log = `#{command}`
+
+        deploy.log = log
+
+        $?.success?
       end
     end
   end

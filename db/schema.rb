@@ -10,7 +10,27 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130508001711) do
+ActiveRecord::Schema.define(:version => 20130509014935) do
+
+  create_table "deploys", :force => true do |t|
+    t.text     "actions"
+    t.string   "branch"
+    t.string   "environment"
+    t.string   "box"
+    t.text     "variables"
+    t.string   "commit"
+    t.datetime "started_at"
+    t.datetime "finished_at"
+    t.boolean  "in_progress",    :default => false
+    t.boolean  "was_successful"
+    t.text     "log"
+    t.string   "via"
+    t.string   "on_behalf_of"
+    t.integer  "project_id"
+    t.integer  "user_id"
+    t.datetime "created_at",                        :null => false
+    t.datetime "updated_at",                        :null => false
+  end
 
   create_table "projects", :force => true do |t|
     t.string   "name"

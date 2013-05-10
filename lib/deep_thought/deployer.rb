@@ -18,26 +18,37 @@ module DeepThought
       self.adapters[name] = service
     end
 
-    def self.execute(project, params)
+    def self.execute(deploy)
       if !is_deploying?
-        Git.switch_to_branch(project, params['branch'])
+        Git.switch_to_branch(deploy.project, deploy.branch)
 
-        if @adapters.keys.include?(project['deploy_type'])
+        if @adapters.keys.include?(deploy.project['deploy_type'])
           lock_deployer
 
-          klass = adapters[project['deploy_type']]
+          deploy.started_at = DateTime.now
+          deploy.in_progress = true
+          deploy.save!
+
+          klass = adapters[deploy.project['deploy_type']]
           deployer = klass.new
-          deploy_status = deployer.execute(project, params)
+          deploy_status = deployer.execute(deploy)
 
           unlock_deployer
 
+          deploy.finished_at = DateTime.now
+          deploy.in_progress = false
+
           if deploy_status
+            deploy.was_successful = true
+            deploy.save!
             true
           else
+            deploy.was_successful = false
+            deploy.save!
             raise DeploymentFailedError, "The deployment pondered its own short existence before hitting the ground with a sudden wet thud."
           end
         else
-          raise DeployerNotFoundError, "I don't have a deployer called \"#{project['deploy_type']}\"."
+          raise DeployerNotFoundError, "I don't have a deployer called \"#{deploy.project['deploy_type']}\"."
         end
       else
         raise DeploymentInProgressError, "There is a deployment is progress - please wait until it is finished."

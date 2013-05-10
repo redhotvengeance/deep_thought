@@ -4,7 +4,9 @@ class DeepThoughtCapistranoTest < MiniTest::Unit::TestCase
   def setup
     DatabaseCleaner.start
 
-    @project = DeepThought::Project.new(:name => '_capy-test', :deploy_type => 'capistrano')
+    @project = DeepThought::Project.create(:name => '_capy-test', :repo_url => './test/fixtures/git-test', :deploy_type => 'capistrano')
+    @user = DeepThought::User.create(:email => 'test@test.com', :password => 'secret', :password_confirmation => 'secret')
+    @deploy = DeepThought::Deploy.create(:project_id => @project.id, :user_id => @user.id, :branch => 'master', :commit => '12345')
     @deployer = DeepThought::Deployer::Capistrano.new
 
     FileUtils.cp_r "./test/fixtures/capy-test", "./.projects/_capy-test"
@@ -17,10 +19,13 @@ class DeepThoughtCapistranoTest < MiniTest::Unit::TestCase
   end
 
   def test_deployer_execute_success
-    assert @deployer.execute(@project, {"branch" => "master"})
+    assert @deployer.execute(@deploy)
+    assert @deploy.log
   end
 
   def test_deployer_execute_failed
-    assert !@deployer.execute(@project, {"branch" => "master", "actions" => ["fail_test"]})
+    @deploy.actions = ['fail_test'].to_yaml
+    assert !@deployer.execute(@deploy)
+    assert @deploy.log
   end
 end

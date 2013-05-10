@@ -4,6 +4,8 @@ require 'base64'
 
 module DeepThought
   class User < ActiveRecord::Base
+    has_many :deploys
+
     attr_accessor :password, :password_confirmation
 
     before_save :generate_password_digest

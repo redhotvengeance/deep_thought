@@ -1,7 +1,8 @@
 require "active_record"
 
 require "deep_thought/app"
-require "deep_thought/deploy"
+require "deep_thought/api"
+require "deep_thought/models/deploy"
 require "deep_thought/models/project"
 require "deep_thought/models/state"
 require "deep_thought/models/user"
@@ -44,7 +45,7 @@ module DeepThought
       end
 
       map '/deploy/' do
-        run DeepThought::Deploy
+        run DeepThought::Api
       end
     }
   end

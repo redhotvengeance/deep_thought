@@ -1,6 +1,6 @@
 require File.expand_path '../test_helper.rb', __FILE__
 
-class DeepThoughtDeployTest < MiniTest::Unit::TestCase
+class DeepThoughtApiTest < MiniTest::Unit::TestCase
   include Rack::Test::Methods
 
   def setup

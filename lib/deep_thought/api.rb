@@ -4,7 +4,7 @@ require "deep_thought/git"
 require "deep_thought/deployer"
 
 module DeepThought
-  class Deploy < Sinatra::Base
+  class Api < Sinatra::Base
     if ENV['RACK_ENV'] != 'development' && ENV['RACK_ENV'] != 'test'
       use Rack::SSL
     end
@@ -12,6 +12,7 @@ module DeepThought
     before '*' do
       if request.env['HTTP_AUTHORIZATION'] =~ /Token token="[a-zA-Z0-9\+=]+"/
         token = request.env['HTTP_AUTHORIZATION'].gsub(/Token token="/, '').gsub(/"/, '')
+
         @user = DeepThought::User.find_by_api_key("#{token}")
 
         if !@user
@@ -36,6 +37,15 @@ module DeepThought
       actions = params[:actions].split(',') if params[:actions]
       environment = params[:environment] if params[:environment]
       box = params[:box] if params[:box]
+      variables = nil
+
+      params.each do |k, v|
+        key = k.to_s
+        if key != 'app' && key != 'branch' && key != 'actions' && key != 'environment' && key != 'box' && key != 'splat' && key != 'captures'
+          variables ||= Hash.new
+          variables[k] = v
+        end
+      end
 
       project = Project.find_by_name(app)
 
@@ -59,31 +69,44 @@ module DeepThought
         DeepThought::CIService.is_branch_green?(app, branch, hash)
       end
 
-      parameters = Hash["branch", branch]
+      deploy = DeepThought::Deploy.new
+      deploy.project_id = project.id
+      deploy.user_id = @user.id
+      deploy.branch = branch
 
       response = "executing deploy"
 
       if actions
-        parameters["actions"] = actions
+        deploy.actions = actions.to_yaml
 
         actions.each do |action|
           response += "/#{action}"
         end
       end
 
+      deploy.commit = hash.to_s
+
       response += " #{app}/#{branch}/#{hash}"
 
       if environment
-        parameters["env"] = environment
+        deploy.environment = environment
         response += " to #{environment}"
 
         if box
-          parameters["box"] = box
+          deploy.box = box
           response += "/#{box}"
         end
       end
 
-      DeepThought::Deployer.execute(project, parameters)
+      if variables
+        deploy.variables = variables.to_yaml
+        response += " with #{variables.to_s}"
+      end
+
+      deploy.via = 'api'
+      deploy.save!
+
+      DeepThought::Deployer.execute(deploy)
 
       response
     end
