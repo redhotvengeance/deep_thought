@@ -64,13 +64,72 @@ module DeepThought
 
     get '/projects/:name' do
       project = DeepThought::Project.find_by_name(params[:name])
+      branches = DeepThought::Git.get_list_of_branches(project)
+
+      if branches.include?('master')
+        branches.unshift(branches.slice!(branches.index('master')))
+      end
+
+      deploy = DeepThought::Deploy.new
 
       settings.deep_thought_message = "Now pondering: #{project.name}."
 
-      haml :"projects/index", :locals => {:project => project}
+      haml :"projects/show", :locals => {:project => project, :branches => branches, :deploy => deploy}
     end
 
     get '/project/:name' do
+      redirect "/projects/#{params[:name]}"
+    end
+
+    post '/projects/:name/deploy' do
+      project = DeepThought::Project.find_by_name(params[:name])
+      branches = DeepThought::Git.get_list_of_branches(project)
+
+      if branches.include?('master')
+        branches.unshift(branches.slice!(branches.index('master')))
+      end
+
+      deploy = DeepThought::Deploy.new
+
+      deploy.branch = params[:deploy][:branch]
+      deploy.commit = DeepThought::Git.get_latest_commit_for_branch(project, deploy.branch)[0].to_s
+      deploy.environment = params[:deploy][:environment] if !params[:deploy][:environment].blank?
+      deploy.box = params[:deploy][:box] if !params[:deploy][:box].blank?
+
+      if params[:deploy][:actions]
+        actions = params[:deploy][:actions]
+        actions.reject!(&:empty?).blank?
+
+        if actions.count > 0
+          deploy.actions = actions.to_yaml
+        end
+      end
+
+      if params[:deploy][:variables]
+        vars = params[:deploy][:variables]
+        keys = vars[:keys]
+        values = vars[:values]
+
+        variables = Hash[keys.zip(values)]
+        variables.reject! { |k, v| k == '' }
+        variables.reject! { |k, v| v == '' }
+
+        if variables.count > 0
+          deploy.variables = variables.to_yaml
+        end
+      end
+
+      deploy.project_id = project.id
+      deploy.user_id = current_user.id
+      deploy.via = 'web'
+
+      if !deploy.save
+        settings.deep_thought_message = "Deep Thought has a problem with your request."
+        haml :"projects/show", :locals => {:project => project, :branches => branches, :deploy => deploy}
+      end
+
+      DeepThought::Deployer.execute(deploy)
+
       redirect "/projects/#{params[:name]}"
     end
 

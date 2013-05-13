@@ -1,0 +1,18 @@
+.deploy
+  %form{:"accept-charset" => "UTF-8", :action => "/projects/#{project.name}/deploy", :method => "POST"}
+    = csrf_tag
+    .field
+      %label.two-column{:for => 'branch'} branch:
+      %select.two-column{:id => 'branch', :name => "deploy[branch]"}
+        - branches.each do |branch|
+          %option= branch
+    .field
+      %input{:id => "environment", :name => "deploy[environment]", :placeholder => "environment <default>", :type => "text"}
+    .field
+      %input{:id => "box", :name => "deploy[box]", :placeholder => "box <default>", :type => "text"}
+    .field
+      %a.box#add-action{:href => "#"} + add action
+    .field
+      %a.box#add-variable{:href => "#"} + add variable
+    .field
+      %input{:class => "button", :type => "submit", :value => "deploy"}

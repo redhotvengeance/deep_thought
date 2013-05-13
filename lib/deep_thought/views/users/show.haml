@@ -3,10 +3,14 @@
     %form{:"accept-charset" => "UTF-8", :action => "/users/#{user.id}", :method => "POST"}
       = csrf_tag
       %input{:type => 'hidden', :name => "_method", :value => "put"}
-      %input{:id => "email", :name => "user[email]", :value => user.email, :type => "text"}
-      %input{:id => "password", :name => "user[password]", :placeholder => "new password", :type => "password"}
-      %input{:id => "password_confirmation", :name => "user[password_confirmation]", :placeholder => "confirm password", :type => "password"}
-      %input{:class => "button", :type => "submit", :value => "update"}
+      .field
+        %input{:id => "email", :name => "user[email]", :value => user.email, :type => "text"}
+      .field
+        %input{:id => "password", :name => "user[password]", :placeholder => "new password", :type => "password"}
+      .field
+        %input{:id => "password_confirmation", :name => "user[password_confirmation]", :placeholder => "confirm password", :type => "password"}
+      .field
+        %input{:class => "button", :type => "submit", :value => "update"}
 
   .user-api-key
     - if current_user.api_key

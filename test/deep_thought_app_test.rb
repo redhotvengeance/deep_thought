@@ -135,4 +135,84 @@ class DeepThoughtAppTest < MiniTest::Unit::TestCase
 
     assert_equal "http://www.example.com/", page.current_url
   end
+
+  def test_app_project_branches
+    project = DeepThought::Project.create(:name => '_test', :repo_url => './test/fixtures/git-test', :deploy_type => 'mock')
+
+    login(@user_email, @user_password)
+
+    within(".list") do
+      click_link '_test'
+    end
+
+    assert page.has_select?('deploy[branch]', :options => ['master', 'topic'])
+  end
+
+  def test_app_project_deploy_no_attributes
+    project = DeepThought::Project.create(:name => '_test', :repo_url => './test/fixtures/git-test', :deploy_type => 'mock')
+
+    assert_equal DeepThought::Deploy.count, 0
+
+    deployer = mock('class')
+    deployer.expects(:new).returns(deployer)
+    deployer.expects(:execute).returns(true)
+    DeepThought::Deployer.register_adapter('mock', deployer)
+
+    login(@user_email, @user_password)
+
+    within(".list") do
+      click_link '_test'
+    end
+
+    within(".deploy > form") do
+      click_button 'deploy'
+    end
+
+    assert_equal DeepThought::Deploy.count, 1
+
+    deploy = DeepThought::Deploy.all[0]
+
+    assert_equal deploy.branch, 'master'
+    assert_equal deploy.environment, nil
+    assert_equal deploy.box, nil
+    assert_equal deploy.actions, nil
+    assert_equal deploy.variables, nil
+    assert_equal deploy.via, 'web'
+  end
+
+  def test_app_project_deploy_with_attributes
+    project = DeepThought::Project.create(:name => '_test', :repo_url => './test/fixtures/git-test', :deploy_type => 'mock')
+
+    assert_equal DeepThought::Deploy.count, 0
+
+    deployer = mock('class')
+    deployer.expects(:new).returns(deployer)
+    deployer.expects(:execute).returns(true)
+    DeepThought::Deployer.register_adapter('mock', deployer)
+
+    login(@user_email, @user_password)
+
+    within(".list") do
+      click_link '_test'
+    end
+
+    within(".deploy > form") do
+      select('topic', :from => 'deploy[branch]')
+      fill_in 'environment', :with => 'development'
+      fill_in 'box', :with => 'dev1'
+      # TODO: Test actions and variables (need to integrate JavaScript into testing)
+      click_button 'deploy'
+    end
+
+    assert_equal DeepThought::Deploy.count, 1
+
+    deploy = DeepThought::Deploy.all[0]
+
+    assert_equal deploy.branch, 'topic'
+    assert_equal deploy.environment, 'development'
+    assert_equal deploy.box, 'dev1'
+    assert_equal deploy.actions, nil
+    assert_equal deploy.variables, nil
+    assert_equal deploy.via, 'web'
+  end
 end

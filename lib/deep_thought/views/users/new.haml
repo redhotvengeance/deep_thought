@@ -1,6 +1,10 @@
 %form{:"accept-charset" => "UTF-8", :action => "/users/new", :method => "POST"}
   = csrf_tag
-  %input{:id => "email", :name => "user[email]", :placeholder => "user@email.here", :value => user.email, :type => "text"}
-  %input{:id => "password", :name => "user[password]", :placeholder => "password", :type => "password"}
-  %input{:id => "password_confirmation", :name => "user[password_confirmation]", :placeholder => "confirm password", :type => "password"}
-  %input{:class => "button", :type => "submit", :value => "create user"}
+  .field
+    %input{:id => "email", :name => "user[email]", :placeholder => "user@email.here", :value => user.email, :type => "text"}
+  .field
+    %input{:id => "password", :name => "user[password]", :placeholder => "password", :type => "password"}
+  .field
+    %input{:id => "password_confirmation", :name => "user[password_confirmation]", :placeholder => "confirm password", :type => "password"}
+  .field
+    %input{:class => "button", :type => "submit", :value => "create user"}

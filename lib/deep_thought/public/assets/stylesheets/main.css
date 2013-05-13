@@ -136,7 +136,6 @@ input {
   font-size: 1.125rem;
   line-height: 24px;
   line-height: 1.5rem;
-  margin-bottom: 5px;
   text-align: center;
 }
 
@@ -152,11 +151,26 @@ input, textarea, select {
   max-width: 620px;
   margin-left: auto;
   margin-right: auto;
+  padding-bottom: 50px;
   text-align: center;
 }
 
 nav > ul > li {
   width: 25%;
+}
+
+.two-column {
+  width: 49.7%;
+}
+
+.left {
+  float: left;
+  text-align: right;
+}
+
+.right {
+  float: right;
+  text-align: left;
 }
 
 /* MODULES */
@@ -317,6 +331,10 @@ nav > ul > li > a.current, nav > ul > li > a:hover {
   word-break: break-all;
 }
 
+.box:hover {
+  background-color: #c6c8cc;
+}
+
 .user-api-key {
   margin-top: 70px;
 }
@@ -327,4 +345,52 @@ nav > ul > li > a.current, nav > ul > li > a:hover {
 
 .delete-user {
   margin-top: 70px;
+}
+
+.field {
+  min-height: 60px;
+  margin-bottom: 5px;
+}
+
+label {
+  display: block;
+  min-height: 60px;
+  float: left;
+  background-color: #ebedf2;
+  font-family: 'Noto Sans', sans-serif;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 18px;
+  font-size: 1.125rem;
+  line-height: 24px;
+  line-height: 1.5rem;
+  padding-top: 18px;
+  padding-bottom: 15px;
+  padding-left: 15px;
+  padding-right: 15px;
+  text-align: right;
+}
+
+select {
+  display: block;
+  min-height: 60px;
+  float: right;
+  background-color: #d2d4d9;
+  border: none;
+  font-family: 'Droid Sans Mono', sans-serif;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 18px;
+  font-size: 1.125rem;
+  line-height: 24px;
+  line-height: 1.5rem;
+  margin: 0;
+  padding-left: 15px;
+  padding-right: 15px;
+  text-align: right;
+  cursor: pointer;
+}
+
+select:hover {
+  background-color: #c6c8cc;
 }
