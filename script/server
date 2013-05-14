@@ -4,4 +4,4 @@ while read line; do
   export $line
 done < .env
 
-bin/shotgun -p4242 -sthin -Ilib config.ru
+bin/shotgun -p4242 -sthin -Ilib config.ru & rake jobs:work

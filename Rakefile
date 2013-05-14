@@ -14,6 +14,7 @@ task :environment, [:env] => :dotenv do |t, args|
   DeepThought.setup(ENV)
 end
 
+desc "Create a user"
 task :create_user, [:email, :password] => [:environment] do |t, args|
   user = DeepThought::User.create(:email => "#{args[:email]}", :password => "#{args[:password]}", :password_confirmation => "#{args[:password]}")
 
@@ -21,6 +22,18 @@ task :create_user, [:email, :password] => [:environment] do |t, args|
     puts "Error when creating new user: #{user.errors.messages}"
   else
     puts "Created new user with email: #{user.email}."
+  end
+end
+
+namespace :jobs do
+  desc "Start a delayed_job worker"
+  task :work => [:environment] do
+    Delayed::Worker.new(:min_priority => ENV['MIN_PRIORITY'], :max_priority => ENV['MAX_PRIORITY']).start
+  end
+
+  desc "Clear the delayed_job queue"
+  task :clear => [:environment] do
+    Delayed::Job.delete_all
   end
 end
 

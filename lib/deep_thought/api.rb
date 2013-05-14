@@ -106,8 +106,6 @@ module DeepThought
       deploy.via = 'api'
       deploy.save!
 
-      DeepThought::Deployer.execute(deploy)
-
       response
     end
 

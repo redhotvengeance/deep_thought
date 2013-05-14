@@ -1,4 +1,5 @@
 require "active_record"
+require "delayed_job_active_record"
 
 require "deep_thought/app"
 require "deep_thought/api"

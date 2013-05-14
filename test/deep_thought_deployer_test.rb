@@ -7,7 +7,7 @@ class DeepThoughtDeployerTest < MiniTest::Unit::TestCase
     DeepThought::Deployer.adapters = {}
     @project = DeepThought::Project.create(:name => '_test', :repo_url => './test/fixtures/git-test', :deploy_type => 'mock')
     @user = DeepThought::User.create(:email => 'test@test.com', :password => 'secret', :password_confirmation => 'secret')
-    @deploy = DeepThought::Deploy.create(:project_id => @project.id, :user_id => @user.id, :branch => 'master', :commit => '12345')
+    @deploy = DeepThought::Deploy.new(:project_id => @project.id, :user_id => @user.id, :branch => 'master', :commit => '12345')
   end
 
   def teardown
@@ -16,7 +16,7 @@ class DeepThoughtDeployerTest < MiniTest::Unit::TestCase
 
   def test_deployer_not_found
     @project.deploy_type = 'no-deployer'
-    assert_raises(DeepThought::Deployer::DeployerNotFoundError) { DeepThought::Deployer.execute(@deploy) }
+    assert_raises(DeepThought::Deployer::DeployerNotFoundError) { @deploy.save }
   end
 
   def test_deployer_execute_success
@@ -27,7 +27,7 @@ class DeepThoughtDeployerTest < MiniTest::Unit::TestCase
     deployer.expects(:new).returns(deployer)
     deployer.expects(:execute).with(@deploy).returns(true)
     DeepThought::Deployer.register_adapter('mock', deployer)
-    assert DeepThought::Deployer.execute(@deploy)
+    assert @deploy.save
     assert @deploy.started_at
     assert @deploy.finished_at
     assert_equal @deploy.was_successful, true
@@ -41,7 +41,7 @@ class DeepThoughtDeployerTest < MiniTest::Unit::TestCase
     deployer.expects(:new).returns(deployer)
     deployer.expects(:execute).with(@deploy).returns(false)
     DeepThought::Deployer.register_adapter('mock', deployer)
-    assert_raises(DeepThought::Deployer::DeploymentFailedError) { DeepThought::Deployer.execute(@deploy) }
+    assert_raises(DeepThought::Deployer::DeploymentFailedError) { @deploy.save }
     assert @deploy.started_at
     assert @deploy.finished_at
     assert_equal @deploy.was_successful, false
@@ -49,6 +49,6 @@ class DeepThoughtDeployerTest < MiniTest::Unit::TestCase
 
   def test_deployer_lock
     DeepThought::Deployer.lock_deployer
-    assert_raises(DeepThought::Deployer::DeploymentInProgressError) { DeepThought::Deployer.execute(@deploy) }
+    assert_raises(DeepThought::Deployer::DeploymentInProgressError) { @deploy.save }
   end
 end

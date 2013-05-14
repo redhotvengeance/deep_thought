@@ -4,6 +4,8 @@ class DeepThoughtCapistranoTest < MiniTest::Unit::TestCase
   def setup
     DatabaseCleaner.start
 
+    DeepThought::Deploy.any_instance.stubs(:queue)
+
     @project = DeepThought::Project.create(:name => '_capy-test', :repo_url => './test/fixtures/git-test', :deploy_type => 'capistrano')
     @user = DeepThought::User.create(:email => 'test@test.com', :password => 'secret', :password_confirmation => 'secret')
     @deploy = DeepThought::Deploy.create(:project_id => @project.id, :user_id => @user.id, :branch => 'master', :commit => '12345')

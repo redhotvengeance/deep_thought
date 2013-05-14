@@ -26,6 +26,7 @@ Gem::Specification.new do |gem|
   gem.add_dependency "rack-ssl", "~>1.3"
   gem.add_dependency "rack_csrf", "~>2.4"
   gem.add_dependency "haml", "~>4.0"
+  gem.add_dependency "delayed_job_active_record", "~>0.4"
 
   # development
   gem.add_development_dependency "shotgun", "~>0.9"

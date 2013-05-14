@@ -162,8 +162,6 @@ module DeepThought
         haml :"projects/show", :locals => {:project => project, :branches => branches, :deploy => deploy}
       end
 
-      DeepThought::Deployer.execute(deploy)
-
       redirect "/projects/#{params[:name]}"
     end
 

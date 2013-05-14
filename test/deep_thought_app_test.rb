@@ -227,7 +227,14 @@ class DeepThoughtAppTest < MiniTest::Unit::TestCase
 
     assert !page.has_content?("deploy master by #{@user_email}")
 
-    deploy = DeepThought::Deploy.create(:project_id => project.id, :user_id => @user.id, :branch => 'master', :commit => '12345')
+    deploy = DeepThought::Deploy.new(:project_id => project.id, :user_id => @user.id, :branch => 'master', :commit => '12345')
+
+    deployer = mock('class')
+    deployer.expects(:new).returns(deployer)
+    deployer.expects(:execute).with(deploy).returns(true)
+    DeepThought::Deployer.register_adapter('mock', deployer)
+
+    deploy.save
 
     visit '/projects/_test/deploys'
 
