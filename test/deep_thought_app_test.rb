@@ -215,4 +215,22 @@ class DeepThoughtAppTest < MiniTest::Unit::TestCase
     assert_equal deploy.variables, nil
     assert_equal deploy.via, 'web'
   end
+
+  def test_app_project_history
+    project = DeepThought::Project.create(:name => '_test', :repo_url => './test/fixtures/git-test', :deploy_type => 'mock')
+
+    login(@user_email, @user_password)
+
+    visit '/projects/_test'
+
+    click_link 'history...'
+
+    assert !page.has_content?("deploy master by #{@user_email}")
+
+    deploy = DeepThought::Deploy.create(:project_id => project.id, :user_id => @user.id, :branch => 'master', :commit => '12345')
+
+    visit '/projects/_test/deploys'
+
+    assert page.has_content?("deploy master by #{@user_email}")
+  end
 end

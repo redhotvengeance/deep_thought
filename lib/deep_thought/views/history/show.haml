@@ -1,0 +1,68 @@
+- if deploy.in_progress
+  .field
+    %label.two-column.left in progress:
+    %span.two-column.right.info= deploy.in_progress
+- else
+  .field
+    %label.two-column.left was successful:
+    %span.two-column.right.info= deploy.was_successful
+
+.field
+  %label.two-column.left created at:
+  %span.two-column.right.info= deploy.created_at.strftime('%m/%d/%Y %H:%M:%S')
+
+.field
+  %label.two-column.left by:
+  %span.two-column.right.info.long-line= deploy.user.email
+
+- if deploy.on_behalf_of
+  .field
+    %label.two-column.left on behalf of:
+    %span.two-column.right.info.long-line= deploy.on_behalf_of
+
+.field
+  %label.two-column.left via:
+  %span.two-column.right.info= deploy.via
+
+- if deploy.started_at
+  .field
+    %label.two-column.left started at:
+    %span.two-column.right.info= deploy.started_at.strftime('%m/%d/%Y %H:%M:%S')
+
+- if deploy.finished_at
+  .field
+    %label.two-column.left finished at:
+    %span.two-column.right.info= deploy.finished_at.strftime('%m/%d/%Y %H:%M:%S')
+
+.field
+  %label.two-column.left branch:
+  %span.two-column.right.info.long-line= deploy.branch
+
+.field
+  %label.two-column.left commit:
+  %span.two-column.right.info.long-line= deploy.commit
+
+- if deploy.environment
+  .field
+    %label.two-column.left environment:
+    %span.two-column.right.info.long-line= deploy.environment
+
+- if deploy.box
+  .field
+    %label.two-column.left box:
+    %span.two-column.right.info.long-line= deploy.box
+
+- if deploy.actions
+  - YAML.load(deploy.actions).each do |action|
+    .field
+      %label.two-column.left action:
+      %span.two-column.right.info.long-line= action
+
+- if deploy.variables
+  - YAML.load(deploy.variables).each do |variable|
+    .field
+      %label.two-column.left.long-line= "#{variable[0]}:"
+      %span.two-column.right.info.long-line= variable[1]
+
+- if deploy.log
+  %span.info.log= deploy.log

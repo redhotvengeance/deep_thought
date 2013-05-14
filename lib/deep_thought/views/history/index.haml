@@ -1,0 +1,4 @@
+%ul.list
+  - deploys.each do |deploy|
+    %li
+      %a{:class => "#{'alert' if !deploy.was_successful}", :href => "/projects/#{project.name}/deploys/#{deploy.id}"}= "#{deploy.created_at.strftime('%m/%d/%Y | %H:%M:%S')}: deploy #{deploy.branch}#{' to ' + deploy.environment if deploy.environment}#{'/' + deploy.box if deploy.box} by #{deploy.user.email}"

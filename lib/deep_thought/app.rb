@@ -81,6 +81,40 @@ module DeepThought
       redirect "/projects/#{params[:name]}"
     end
 
+    get '/projects/:name/deploys' do
+      project = DeepThought::Project.find_by_name(params[:name])
+      deploys = project.deploys.order('created_at DESC')
+
+      settings.deep_thought_message = "Now remembering: #{project.name}."
+
+      haml :"history/index", :locals => {:project => project, :deploys => deploys}
+    end
+
+    get '/project/:name/deploys' do
+      redirect "/projects/#{params[:name]}/deploys"
+    end
+
+    get '/projects/:name/deploys/:id' do
+      project = DeepThought::Project.find_by_name(params[:name])
+      deploy = project.deploys.find(params[:id])
+
+      settings.deep_thought_message = "Now remembering #{project.name} deploy: #{deploy.id}."
+
+      haml :"history/show", :locals => {:project => project, :deploy => deploy}
+    end
+
+    get '/projects/:name/deploy/:id' do
+      redirect "/projects/#{params[:name]}/deploys/#{params[:id]}"
+    end
+
+    get '/project/:name/deploys/:id' do
+      redirect "/projects/#{params[:name]}/deploys/#{params[:id]}"
+    end
+
+    get '/project/:name/deploy/:id' do
+      redirect "/projects/#{params[:name]}/deploys/#{params[:id]}"
+    end
+
     post '/projects/:name/deploy' do
       project = DeepThought::Project.find_by_name(params[:name])
       branches = DeepThought::Git.get_list_of_branches(project)
