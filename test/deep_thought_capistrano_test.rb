@@ -18,12 +18,12 @@ class DeepThoughtCapistranoTest < MiniTest::Unit::TestCase
     DatabaseCleaner.clean
   end
 
-  def test_deployer_execute_success
+  def test_capistrano_execute_success
     assert @deployer.execute(@deploy)
     assert @deploy.log
   end
 
-  def test_deployer_execute_failed
+  def test_capistrano_execute_failed
     @deploy.actions = ['fail_test'].to_yaml
     assert !@deployer.execute(@deploy)
     assert @deploy.log
