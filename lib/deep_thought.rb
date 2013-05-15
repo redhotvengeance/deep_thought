@@ -1,5 +1,6 @@
 require "active_record"
 require "delayed_job_active_record"
+require "hirefire"
 
 require "deep_thought/app"
 require "deep_thought/api"
@@ -36,6 +37,10 @@ module DeepThought
 
     if settings['CI_SERVICE']
       DeepThought::CIService.setup(settings)
+    end
+
+    if (settings['HIREFIRE_EMAIL'] && settings['HIREFIRE_EMAIL'] != '') && (settings['HIREFIRE_PASSWORD'] && settings['HIREFIRE_PASSWORD'] != '')
+      HireFire::Initializer.initialize!
     end
   end
 
