@@ -178,10 +178,6 @@ nav > ul > li {
   background-color: #903030 !important;
 }
 
-.alert:hover {
-  background-color: #822b2b !important;
-}
-
 /* MODULES */
 
 .button {
@@ -204,7 +200,12 @@ nav > ul > li {
 }
 
 .button:hover {
-  background-color: #575a66;
+  opacity: .75;
+}
+
+.button.disabled {
+  opacity: .1;
+  cursor: auto;
 }
 
 nav {
@@ -309,7 +310,7 @@ nav > ul > li > a.current, nav > ul > li > a:hover {
 }
 
 .list > li > a:hover {
-  background-color: #c6c8cc;
+  opacity: .75;
 }
 
 .list > li:nth-child(2n) > a {
@@ -317,7 +318,7 @@ nav > ul > li > a.current, nav > ul > li > a:hover {
 }
 
 .list > li:nth-child(2n) > a:hover {
-  background-color: #dfe1e5;
+  opacity: .75;
 }
 
 .box {
@@ -341,7 +342,7 @@ nav > ul > li > a.current, nav > ul > li > a:hover {
 }
 
 .box:hover {
-  background-color: #c6c8cc;
+  opacity: .75;
 }
 
 .user-api-key {
@@ -402,7 +403,7 @@ select {
 }
 
 select:hover {
-  background-color: #c6c8cc;
+  opacity: .75;
 }
 
 .deploy {

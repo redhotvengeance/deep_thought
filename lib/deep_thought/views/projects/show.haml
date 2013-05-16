@@ -15,6 +15,9 @@
     .field
       %a.box#add-variable{:href => "#"} + add variable
     .field
-      %input{:class => "button", :type => "submit", :value => "deploy"}
+      - if is_deploying?
+        %input{:id => "deploy", :class => "button disabled", :type => "submit", :value => "can't deploy while deploying", :disabled => "disabled"}
+      - else
+        %input{:id => "deploy", :class => "button", :type => "submit", :value => "deploy"}
 
 %a.box{:href => "/projects/#{project.name}/deploys"} history...

@@ -1,10 +1,13 @@
 require 'sinatra'
+require 'sinatra/json'
 require 'rack/ssl'
 require 'rack/csrf'
 require 'haml'
 
 module DeepThought
   class App < Sinatra::Base
+    helpers Sinatra::JSON
+
     set :root, File.dirname(__FILE__)
     set :public_folder, File.join(root, 'public')
     set :views, File.join(root, 'views')
@@ -225,6 +228,12 @@ module DeepThought
       redirect "/users/#{params[:id]}"
     end
 
+    get '/deploying' do
+      pass unless is_json?
+
+      json :deploying => DeepThought::Deployer.is_deploying?
+    end
+
     get '*' do
       redirect '/'
     end
@@ -256,6 +265,25 @@ module DeepThought
           if path == "/users/#{@current_user.id}"
             "current"
           end
+        end
+      end
+
+      def is_json?
+        is_json = false
+
+        request.accept.each do |a|
+          is_json = true if a.to_s == 'application/json'
+        end
+
+        is_json
+      end
+
+      def is_deploying?
+        if DeepThought::Deployer.is_deploying?
+          settings.deep_thought_message = "Deep Thought is deploying..."
+          true
+        else
+          false
         end
       end
     end

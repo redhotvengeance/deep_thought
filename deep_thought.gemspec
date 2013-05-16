@@ -18,6 +18,8 @@ Gem::Specification.new do |gem|
   gem.require_paths = ["lib"]
 
   gem.add_dependency "sinatra", "~>1.4"
+  gem.add_dependency "sinatra-contrib", "~>1.4"
+  gem.add_dependency "json", "~>1.8"
   gem.add_dependency "activerecord", "~>3.2"
   gem.add_dependency "pg", "~>0.15"
   gem.add_dependency "grit", "~>2.5"

@@ -14,9 +14,9 @@
 
   .user-api-key
     - if current_user.api_key
-      %span.box= current_user.api_key
+      %span.info= current_user.api_key
     - else
-      %span.box no api key (yet)
+      %span.info no api key (yet)
 
     %form{:"accept-charset" => "UTF-8", :action => "/users/#{user.id}/key", :method => "POST"}
       = csrf_tag
@@ -27,7 +27,6 @@
       %p= user.email
 
   .delete-user
-    //%a.button{:href => '/users/new'} delete
     %form{:"accept-charset" => "UTF-8", :action => "/users/#{user.id}", :method => "POST"}
       = csrf_tag
       %input{:type => 'hidden', :name => "_method", :value => "delete"}

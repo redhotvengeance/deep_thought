@@ -23,7 +23,7 @@
                 = csrf_tag
                 %input{:type => 'hidden', :name => "_method", :value => "delete"}
                 %input{:type => "submit", :value => "logout"}
-      .deep-thought
+      %div{:class => "deep-thought #{'alert' if is_deploying?}"}
         %h1= settings.deep_thought_message
     .content
       = yield
