@@ -81,4 +81,17 @@ class DeepThoughtApiTest < MiniTest::Unit::TestCase
     assert !last_response.ok?
     assert_equal "Sorry, but I'm currently in mid-deployment. Ask me again when I'm done.", last_response.body
   end
+
+  def test_api_status_ready
+    get '/deploy/status', {}, {"HTTP_AUTHORIZATION" => 'Token token="12345"'}
+    assert last_response.ok?
+    assert_equal "I'm ready to ponder the infinitely complex questions of the universe.", last_response.body
+  end
+
+  def test_api_status_busy
+    DeepThought::Deployer.lock_deployer
+    get '/deploy/status', {}, {"HTTP_AUTHORIZATION" => 'Token token="12345"'}
+    assert !last_response.ok?
+    assert_equal "I'm currently in mid-deployment.", last_response.body
+  end
 end

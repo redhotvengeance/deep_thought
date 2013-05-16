@@ -23,6 +23,14 @@ module DeepThought
       end
     end
 
+    get '/status' do
+      if DeepThought::Deployer.is_deploying?
+        [500, "I'm currently in mid-deployment."]
+      else
+        [200, "I'm ready to ponder the infinitely complex questions of the universe."]
+      end
+    end
+
     get '*' do
       [401, "I don't got what you're trying to GET."]
     end
