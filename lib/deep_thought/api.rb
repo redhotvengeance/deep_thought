@@ -37,11 +37,12 @@ module DeepThought
       actions = params[:actions].split(',') if params[:actions]
       environment = params[:environment] if params[:environment]
       box = params[:box] if params[:box]
+      on_behalf_of = params[:on_behalf_of] if params[:on_behalf_of]
       variables = nil
 
       params.each do |k, v|
         key = k.to_s
-        if key != 'app' && key != 'branch' && key != 'actions' && key != 'environment' && key != 'box' && key != 'splat' && key != 'captures'
+        if key != 'app' && key != 'branch' && key != 'actions' && key != 'environment' && key != 'box' && key != 'on_behalf_of' && key != 'splat' && key != 'captures'
           variables ||= Hash.new
           variables[k] = v
         end
@@ -101,6 +102,11 @@ module DeepThought
       if variables
         deploy.variables = variables.to_yaml
         response += " with #{variables.to_s}"
+      end
+
+      if on_behalf_of
+        deploy.on_behalf_of = on_behalf_of
+        response += " on behalf of #{on_behalf_of}"
       end
 
       deploy.via = 'api'
