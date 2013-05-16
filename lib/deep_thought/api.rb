@@ -48,6 +48,10 @@ module DeepThought
         end
       end
 
+      if DeepThought::Deployer.is_deploying?
+        return [500, "Sorry, but I'm currently in mid-deployment. Ask me again when I'm done."]
+      end
+
       project = Project.find_by_name(app)
 
       if !project

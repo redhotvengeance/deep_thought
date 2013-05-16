@@ -73,4 +73,12 @@ class DeepThoughtApiTest < MiniTest::Unit::TestCase
     assert !last_response.ok?
     assert_equal "Hmm, that branch doesn't appear to exist. Have you pushed it?", last_response.body
   end
+
+  def test_api_in_deployment
+    DeepThought::Deployer.lock_deployer
+    project = DeepThought::Project.create(:name => '_test', :repo_url => 'http://fake.url', :deploy_type => 'capy')
+    post '/deploy/_test', {}, {"HTTP_AUTHORIZATION" => 'Token token="12345"'}
+    assert !last_response.ok?
+    assert_equal "Sorry, but I'm currently in mid-deployment. Ask me again when I'm done.", last_response.body
+  end
 end
