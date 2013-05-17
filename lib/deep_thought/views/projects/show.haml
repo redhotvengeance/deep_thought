@@ -20,4 +20,6 @@
       - else
         %input{:id => "deploy", :class => "button", :type => "submit", :value => "deploy"}
 
+%a.box{:href => "/projects/edit/#{project.name}"} edit...
+
 %a.box{:href => "/projects/#{project.name}/deploys"} history...

@@ -65,9 +65,59 @@ module DeepThought
       redirect '/login'
     end
 
+    get '/projects/add/new' do
+      project = DeepThought::Project.new
+
+      haml :"projects/new", :locals => {:project => project}
+    end
+
+    get '/project/add/new' do
+      redirect "/projects/add/new"
+    end
+
+    post '/projects/add/new' do
+      project = DeepThought::Project.new(params[:project])
+
+      if project.save
+        redirect '/'
+      else
+        settings.deep_thought_message = "Deep Thought has a problem with your request."
+        haml :"projects/new", :locals => {:project => project}
+      end
+    end
+
+    get '/projects/edit/:name' do
+      project = DeepThought::Project.find_by_name(params[:name])
+
+      haml :"projects/edit", :locals => {:project => project}
+    end
+
+    get '/project/edit/:name' do
+      redirect "/projects/edit/#{params[:name]}"
+    end
+
+    put '/projects/edit/:name' do
+      project = DeepThought::Project.find_by_name(params[:name])
+
+      if project.update_attributes(params[:project])
+        redirect "/projects/#{project.name}"
+      else
+        settings.deep_thought_message = "Deep Thought has a problem with your request."
+        haml :"projects/edit", :locals => {:project => project}
+      end
+    end
+
+    delete '/projects/delete/:name' do
+      project = DeepThought::Project.find_by_name(params[:name])
+
+      project.destroy
+
+      redirect '/'
+    end
+
     get '/projects/:name' do
       project = DeepThought::Project.find_by_name(params[:name])
-      branches = DeepThought::Git.get_list_of_branches(project)
+      branches = DeepThought::Git.get_list_of_branches(project) || []
 
       if branches.include?('master')
         branches.unshift(branches.slice!(branches.index('master')))

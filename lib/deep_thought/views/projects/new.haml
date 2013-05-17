@@ -1,0 +1,10 @@
+%form{:"accept-charset" => "UTF-8", :action => "/projects/add/new", :method => "POST"}
+  = csrf_tag
+  .field
+    %input{:id => "name", :name => "project[name]", :placeholder => "name", :value => project.name, :type => "text"}
+  .field
+    %input{:id => "repo", :name => "project[repo_url]", :placeholder => "repository url", :value => project.repo_url, :type => "text"}
+  .field
+    %input{:id => "type", :name => "project[deploy_type]", :placeholder => "deployment type", :value => project.deploy_type, :type => "text"}
+  .field
+    %input{:class => "button", :type => "submit", :value => "create project"}

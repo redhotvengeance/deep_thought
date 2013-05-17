@@ -240,4 +240,71 @@ class DeepThoughtAppTest < MiniTest::Unit::TestCase
 
     assert page.has_content?("deploy master by #{@user_email}")
   end
+
+  def test_app_add_project
+    login(@user_email, @user_password)
+
+    visit "/projects/add/new"
+    within(".content > form") do
+      fill_in 'name', :with => 'test'
+      fill_in 'repo', :with => 'repo'
+      fill_in 'type', :with => 'type'
+      click_button 'create project'
+    end
+
+    assert_equal "http://www.example.com/", page.current_url
+    assert page.has_content?('test')
+  end
+
+  def test_app_edit_project
+    login(@user_email, @user_password)
+
+    visit "/projects/add/new"
+    within(".content > form") do
+      fill_in 'name', :with => 'test'
+      fill_in 'repo', :with => 'repo'
+      fill_in 'type', :with => 'type'
+      click_button 'create project'
+    end
+
+    assert page.has_content?('test')
+
+    visit "/projects/edit/test"
+    within(".content > form") do
+      fill_in 'name', :with => 'test2'
+      click_button 'update project'
+    end
+
+    assert_equal "http://www.example.com/projects/test2", page.current_url
+    assert page.has_content?('Now pondering: test2')
+
+    visit "/"
+
+    assert page.has_content?('test2')
+  end
+
+  def test_app_delete_project
+    login(@user_email, @user_password)
+
+    visit "/projects/add/new"
+    within(".content > form") do
+      fill_in 'name', :with => 'test'
+      fill_in 'repo', :with => 'repo'
+      fill_in 'type', :with => 'type'
+      click_button 'create project'
+    end
+
+    assert page.has_content?('test')
+
+    within(".list") do
+      click_link 'test'
+    end
+
+    click_link 'edit...'
+
+    click_button 'delete project'
+
+    assert_equal "http://www.example.com/", page.current_url
+    assert !page.has_content?('test')
+  end
 end

@@ -349,11 +349,11 @@ nav > ul > li > a.current, nav > ul > li > a:hover {
   margin-top: 70px;
 }
 
-.add-user {
+.add-project, .add-user {
   margin-bottom: 70px;
 }
 
-.delete-user {
+.delete-project, .delete-user {
   margin-top: 70px;
 }
 
