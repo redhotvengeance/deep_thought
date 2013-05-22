@@ -7,4 +7,9 @@
   .field
     %input{:id => "type", :name => "project[deploy_type]", :placeholder => "deployment type", :value => project.deploy_type, :type => "text"}
   .field
+    %label.two-column{:for => 'ci'} uses continuous integration:
+    %select.two-column{:id => 'ci', :name => "project[ci]"}
+      %option{:selected => 'selected'} true
+      %option false
+  .field
     %input{:class => "button", :type => "submit", :value => "create project"}

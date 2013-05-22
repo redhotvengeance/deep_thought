@@ -2,6 +2,7 @@ module DeepThought
   module CIService
     class CIServiceNotFoundError < StandardError; end
     class CIBuildNotGreenError < StandardError; end
+    class CIProjectAccessError < StandardError; end
 
     class << self
       attr_accessor :adapters, :ci_service
@@ -28,13 +29,17 @@ module DeepThought
     end
 
     def self.is_branch_green?(app, branch, hash)
-      is_green = @ci_service.is_branch_green?(app, branch, hash)
+      begin
+        is_green = @ci_service.is_branch_green?(app, branch, hash)
 
-      if !is_green
-        raise CIBuildNotGreenError, "Commit #{hash} on project #{app} (in branch #{branch}) is not green. Fix it before deploying."
+        if !is_green
+          raise CIBuildNotGreenError, "Commit #{hash} on project #{app} (in branch #{branch}) is not green. Fix it before deploying."
+        end
+
+        true
+      rescue
+        raise CIProjectAccessError, "Something went wrong with asking CI about commit #{hash} on project #{app} (in branch #{branch})."
       end
-
-      true
     end
   end
 end

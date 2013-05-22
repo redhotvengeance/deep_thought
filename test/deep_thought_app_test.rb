@@ -254,6 +254,13 @@ class DeepThoughtAppTest < MiniTest::Unit::TestCase
 
     assert_equal "http://www.example.com/", page.current_url
     assert page.has_content?('test')
+
+    visit "/projects/edit/test"
+
+    assert_equal find_field('name').value, 'test'
+    assert_equal find_field('repo').value, 'repo'
+    assert_equal find_field('type').value, 'type'
+    assert page.has_select?('project[ci]', :selected => 'true')
   end
 
   def test_app_edit_project
@@ -272,15 +279,21 @@ class DeepThoughtAppTest < MiniTest::Unit::TestCase
     visit "/projects/edit/test"
     within(".content > form") do
       fill_in 'name', :with => 'test2'
+      fill_in 'repo', :with => 'repo2'
+      fill_in 'type', :with => 'type2'
+      select('false', :from => 'project[ci]')
       click_button 'update project'
     end
 
     assert_equal "http://www.example.com/projects/test2", page.current_url
     assert page.has_content?('Now pondering: test2')
 
-    visit "/"
+    visit "/projects/edit/test2"
 
-    assert page.has_content?('test2')
+    assert_equal find_field('name').value, 'test2'
+    assert_equal find_field('repo').value, 'repo2'
+    assert_equal find_field('type').value, 'type2'
+    assert page.has_select?('project[ci]', :selected => 'false')
   end
 
   def test_app_delete_project

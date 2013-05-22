@@ -79,7 +79,9 @@ module DeepThought
       end
 
       if DeepThought::CIService.ci_service
-        DeepThought::CIService.is_branch_green?(app, branch, hash)
+        if project.ci
+          DeepThought::CIService.is_branch_green?(app, branch, hash)
+        end
       end
 
       deploy = DeepThought::Deploy.new
@@ -131,15 +133,16 @@ module DeepThought
       app = params[:app]
       repo_url = params[:repo_url]
       deploy_type = params[:deploy_type]
+      ci = params[:ci] || 'true'
 
       if !repo_url || !deploy_type
         return [500, "Sorry, but I need a project name, repo url, and deploy type. No exceptions, despite how nicely you ask."]
       end
 
-      project = Project.new(:name => app, :repo_url => repo_url, :deploy_type => deploy_type)
+      project = Project.new(:name => app, :repo_url => repo_url, :deploy_type => deploy_type, :ci => ci)
 
       if project.save
-        [200, "Set up new project called #{app} which deploys with #{deploy_type} and pulls from #{repo_url}."]
+        [200, "Set up new project called #{app} which deploys with #{deploy_type} and pulls from #{repo_url} and #{if ci == 'true' then 'uses' else 'doesn\'t use' end} ci."]
       else
         [422, "Shit, something went wrong: #{project.errors.messages}."]
       end
