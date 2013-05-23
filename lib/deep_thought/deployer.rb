@@ -18,6 +18,52 @@ module DeepThought
       self.adapters[name] = service
     end
 
+    def self.create(project, user, via, options = {})
+      branch = options[:branch] || 'master'
+      actions = options[:actions] if options[:actions]
+      environment = options[:environment] if options[:environment]
+      box = options[:box] if options[:box]
+      variables = options[:variables] if options[:variables]
+      on_behalf_of = options[:on_behalf_of] if options[:on_behalf_of]
+
+      if is_deploying?
+        raise DeploymentInProgressError, "Sorry, but I'm currently in mid-deployment. Ask me again when I'm done."
+      end
+
+      hashes = Git.get_latest_commit_for_branch(project, branch)
+
+      if !hashes
+        raise DeepThought::Git::GitRepositoryNotFoundError, "I can't seem to access that repo. Are you sure the URL is correct and that I have access to it?"
+      end
+
+      hash = hashes[0]
+
+      if !hash
+        raise DeepThought::Git::GitBranchNotFoundError, "#{project.name} doesn't appear to have a branch called #{branch}. Have you pushed it?"
+      end
+
+      if DeepThought::CIService.ci_service
+        if project.ci
+          if !DeepThought::CIService.is_branch_green?(project.name, branch, hash)
+            raise DeepThought::CIService::CIBuildNotGreenError, "Commit #{hash} on project #{app} (in branch #{branch}) is not green. Fix it before deploying."
+          end
+        end
+      end
+
+      deploy = DeepThought::Deploy.new
+      deploy.project_id = project.id
+      deploy.user_id = user.id
+      deploy.branch = branch
+      deploy.commit = hash.to_s
+      deploy.via = via
+      deploy.actions = actions.to_yaml if actions
+      deploy.environment = environment if environment
+      deploy.box = box if environment && box
+      deploy.variables = variables.to_yaml if variables
+      deploy.on_behalf_of = on_behalf_of if on_behalf_of
+      deploy.save!
+    end
+
     def self.execute(deploy)
       if !is_deploying?
         Git.switch_to_branch(deploy.project, deploy.branch)
@@ -51,7 +97,7 @@ module DeepThought
           raise DeployerNotFoundError, "I don't have a deployer called \"#{deploy.project['deploy_type']}\"."
         end
       else
-        raise DeploymentInProgressError, "There is a deployment is progress - please wait until it is finished."
+        raise DeploymentInProgressError, "Sorry, but I'm currently in mid-deployment. Ask me again when I'm done."
       end
     end
 

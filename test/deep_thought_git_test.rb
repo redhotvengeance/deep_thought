@@ -42,7 +42,7 @@ class DeepThoughtGitTest < MiniTest::Unit::TestCase
   end
 
   def test_git_switch_to_branch_failed
-    assert_raises(DeepThought::GitBranchNotFoundError) { DeepThought::Git.switch_to_branch(@project, 'no-branch') }
+    assert_raises(DeepThought::Git::GitBranchNotFoundError) { DeepThought::Git.switch_to_branch(@project, 'no-branch') }
   end
 
   def test_git_get_list_of_branches

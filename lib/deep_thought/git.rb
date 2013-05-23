@@ -1,9 +1,10 @@
 require 'grit'
 
 module DeepThought
-  class GitBranchNotFoundError < StandardError; end
+  module Git
+    class GitRepositoryNotFoundError < StandardError; end
+    class GitBranchNotFoundError < StandardError; end
 
-  class Git
     def self.setup(project)
       exit_status = system "git clone #{project.repo_url} .projects/#{project.name} > /dev/null 2>&1"
 

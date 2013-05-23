@@ -30,15 +30,9 @@ module DeepThought
 
     def self.is_branch_green?(app, branch, hash)
       begin
-        is_green = @ci_service.is_branch_green?(app, branch, hash)
-
-        if !is_green
-          raise CIBuildNotGreenError, "Commit #{hash} on project #{app} (in branch #{branch}) is not green. Fix it before deploying."
-        end
-
-        true
+        @ci_service.is_branch_green?(app, branch, hash)
       rescue
-        raise CIProjectAccessError, "Something went wrong with asking CI about commit #{hash} on project #{app} (in branch #{branch})."
+        raise CIProjectAccessError, "Something went wrong asking #{ENV['CI_SERVICE']} about commit #{hash} in #{app} on the #{branch} branch."
       end
     end
   end

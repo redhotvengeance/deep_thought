@@ -56,77 +56,59 @@ module DeepThought
         end
       end
 
-      if DeepThought::Deployer.is_deploying?
-        return [500, "Sorry, but I'm currently in mid-deployment. Ask me again when I'm done."]
-      end
-
-      project = Project.find_by_name(app)
+      project = DeepThought::Project.find_by_name(app)
 
       if !project
         return [500, "Hmm, that project doesn't appear to exist. Have you set it up?"]
       end
 
-      hashes = Git.get_latest_commit_for_branch(project, branch)
-
-      if !hashes
-        return [500, "Woah - I can't seem to access that repo. Are you sure the URL is correct and that I have access to it?"]
-      end
-
-      hash = hashes[0]
-
-      if !hash
-        return [500, "Hmm, that branch doesn't appear to exist. Have you pushed it?"]
-      end
-
-      if DeepThought::CIService.ci_service
-        if project.ci
-          DeepThought::CIService.is_branch_green?(app, branch, hash)
-        end
-      end
-
-      deploy = DeepThought::Deploy.new
-      deploy.project_id = project.id
-      deploy.user_id = @user.id
-      deploy.branch = branch
+      options = {}
+      options[:branch] = branch
 
       response = "executing deploy"
 
       if actions
-        deploy.actions = actions.to_yaml
+        options[:actions] = actions
 
         actions.each do |action|
           response += "/#{action}"
         end
       end
 
-      deploy.commit = hash.to_s
-
-      response += " #{app}/#{branch}/#{hash}"
+      response += " #{app}/#{branch}"
 
       if environment
-        deploy.environment = environment
+        options[:environment] = environment
         response += " to #{environment}"
 
         if box
-          deploy.box = box
+          options[:box] = box
           response += "/#{box}"
         end
       end
 
       if variables
-        deploy.variables = variables.to_yaml
+        options[:variables] = variables
         response += " with #{variables.to_s}"
       end
 
       if on_behalf_of
-        deploy.on_behalf_of = on_behalf_of
+        options[:on_behalf_of] = on_behalf_of
         response += " on behalf of #{on_behalf_of}"
       end
 
-      deploy.via = 'api'
-      deploy.save!
+      begin
+        DeepThought::Deployer.create(project, @user, 'api', options)
 
-      response
+        response
+      rescue => e
+        if ENV['RACK_ENV'] != 'test'
+          puts e.inspect
+          puts e.backtrace
+        end
+
+        [500, e.message]
+      end
     end
 
     post '/setup/:app' do

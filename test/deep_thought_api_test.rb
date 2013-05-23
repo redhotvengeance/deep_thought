@@ -64,14 +64,15 @@ class DeepThoughtApiTest < MiniTest::Unit::TestCase
     project = DeepThought::Project.create(:name => '_test', :repo_url => 'http://fake.url', :deploy_type => 'capy')
     post '/deploy/_test', {}, {"HTTP_AUTHORIZATION" => 'Token token="12345"'}
     assert !last_response.ok?
-    assert_equal "Woah - I can't seem to access that repo. Are you sure the URL is correct and that I have access to it?", last_response.body
+    assert_equal "I can't seem to access that repo. Are you sure the URL is correct and that I have access to it?", last_response.body
   end
 
   def test_api_no_branch
     project = DeepThought::Project.create(:name => '_test', :repo_url => './test/fixtures/git-test', :deploy_type => 'capy')
-    post '/deploy/_test', params={:branch => 'no-branch'}, {"HTTP_AUTHORIZATION" => 'Token token="12345"'}
+    branch = 'no-branch'
+    post '/deploy/_test', params={:branch => branch}, {"HTTP_AUTHORIZATION" => 'Token token="12345"'}
     assert !last_response.ok?
-    assert_equal "Hmm, that branch doesn't appear to exist. Have you pushed it?", last_response.body
+    assert_equal "#{project.name} doesn't appear to have a branch called #{branch}. Have you pushed it?", last_response.body
   end
 
   def test_api_in_deployment

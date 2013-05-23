@@ -39,6 +39,6 @@ class DeepThoughtCIServiceTest < MiniTest::Unit::TestCase
     ci_service.expects(:is_branch_green?).with('app', 'master', 'hash').returns(false)
     DeepThought::CIService.register_adapter('mock', ci_service)
     DeepThought::CIService.setup({"CI_SERVICE" => "mock"})
-    assert_raises(DeepThought::CIService::CIBuildNotGreenError) { DeepThought::CIService.is_branch_green?('app', 'master', 'hash') }
+    assert !DeepThought::CIService.is_branch_green?('app', 'master', 'hash')
   end
 end
