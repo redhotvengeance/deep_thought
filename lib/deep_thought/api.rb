@@ -1,15 +1,22 @@
 require "sinatra"
+require 'sinatra/json'
 require 'rack/ssl'
 require "deep_thought/git"
 require "deep_thought/deployer"
 
 module DeepThought
   class Api < Sinatra::Base
+    helpers Sinatra::JSON
+
     if ENV['RACK_ENV'] != 'development' && ENV['RACK_ENV'] != 'test'
       use Rack::SSL
     end
 
     before '*' do
+      if !is_json?
+        halt 400, 'I prefer to converse in JSON.'
+      end
+
       if request.env['HTTP_AUTHORIZATION'] =~ /Token token="[a-zA-Z0-9\+=]+"/
         token = request.env['HTTP_AUTHORIZATION'].gsub(/Token token="/, '').gsub(/"/, '')
 
@@ -40,20 +47,20 @@ module DeepThought
     end
 
     post '/:app' do
-      app = params[:app]
-      branch = params[:branch] || 'master'
-      actions = params[:actions].split(',') if params[:actions]
-      environment = params[:environment] if params[:environment]
-      box = params[:box] if params[:box]
-      on_behalf_of = params[:on_behalf_of] if params[:on_behalf_of]
-      variables = nil
+      raw = request.body.read
+      data = JSON.parse(raw) if raw != ''
 
-      params.each do |k, v|
-        key = k.to_s
-        if key != 'app' && key != 'branch' && key != 'actions' && key != 'environment' && key != 'box' && key != 'on_behalf_of' && key != 'splat' && key != 'captures'
-          variables ||= Hash.new
-          variables[k] = v
-        end
+      app = params[:app]
+
+      if data
+        branch = data['branch'] || 'master'
+        actions = data['actions'] if data['actions']
+        environment = data['environment'] if data['environment']
+        box = data['box'] if data['box']
+        on_behalf_of = data['on_behalf_of'] if data['on_behalf_of']
+        variables = data['variables'] if data['variables']
+      else
+        branch = 'master'
       end
 
       project = DeepThought::Project.find_by_name(app)
@@ -112,10 +119,16 @@ module DeepThought
     end
 
     post '/setup/:app' do
+      raw = request.body.read
+      data = JSON.parse(raw) if raw != ''
+
       app = params[:app]
-      repo_url = params[:repo_url]
-      deploy_type = params[:deploy_type]
-      ci = params[:ci] || 'true'
+
+      if data
+        repo_url = data['repo_url'] if data['repo_url']
+        deploy_type = data['deploy_type'] if data['deploy_type']
+        ci = data['ci'] || 'true'
+      end
 
       if !repo_url || !deploy_type
         return [500, "Sorry, but I need a project name, repo url, and deploy type. No exceptions, despite how nicely you ask."]
@@ -127,6 +140,18 @@ module DeepThought
         [200, "Set up new project called #{app} which deploys with #{deploy_type} and pulls from #{repo_url} and #{if ci == 'true' then 'uses' else 'doesn\'t use' end} ci."]
       else
         [422, "Shit, something went wrong: #{project.errors.messages}."]
+      end
+    end
+
+    helpers do
+      def is_json?
+        is_json = false
+
+        request.accept.each do |a|
+          is_json = true if a.to_s == 'application/json'
+        end
+
+        is_json
       end
     end
   end
