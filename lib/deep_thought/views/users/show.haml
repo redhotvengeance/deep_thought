@@ -10,11 +10,13 @@
       .field
         %input{:id => "password_confirmation", :name => "user[password_confirmation]", :placeholder => "confirm password", :type => "password"}
       .field
+        %input.long-line{:id => "notification_url", :name => "user[notification_url]", :value => user.notification_url, :placeholder => "notification url (if you're a bot)", :type => "text"}
+      .field
         %input{:class => "button", :type => "submit", :value => "update"}
 
   .user-api-key
     - if current_user.api_key
-      %span.info= current_user.api_key
+      %span.info.long-line= current_user.api_key
     - else
       %span.info no api key (yet)
 
@@ -25,6 +27,9 @@
   %ul.list
     %li
       %p= user.email
+    - if user.notification_url
+      %li
+        %p= user.notification_url
 
   .delete-user
     %form{:"accept-charset" => "UTF-8", :action => "/users/#{user.id}", :method => "POST"}

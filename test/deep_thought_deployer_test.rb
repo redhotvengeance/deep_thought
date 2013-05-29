@@ -27,6 +27,7 @@ class DeepThoughtDeployerTest < MiniTest::Unit::TestCase
     deployer.expects(:new).returns(deployer)
     deployer.expects(:execute).with(@deploy).returns(true)
     DeepThought::Deployer.register_adapter('mock', deployer)
+    DeepThought::Notifier.stubs(:notify)
     assert @deploy.save
     assert @deploy.started_at
     assert @deploy.finished_at
@@ -41,6 +42,7 @@ class DeepThoughtDeployerTest < MiniTest::Unit::TestCase
     deployer.expects(:new).returns(deployer)
     deployer.expects(:execute).with(@deploy).returns(false)
     DeepThought::Deployer.register_adapter('mock', deployer)
+    DeepThought::Notifier.stubs(:notify)
     assert_raises(DeepThought::Deployer::DeploymentFailedError) { @deploy.save }
     assert @deploy.started_at
     assert @deploy.finished_at

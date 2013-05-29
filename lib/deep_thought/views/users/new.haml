@@ -7,4 +7,6 @@
   .field
     %input{:id => "password_confirmation", :name => "user[password_confirmation]", :placeholder => "confirm password", :type => "password"}
   .field
+    %input.long-line{:id => "notification_url", :name => "user[notification_url]", :placeholder => "notification url (if you're a bot)", :type => "text"}
+  .field
     %input{:class => "button", :type => "submit", :value => "create user"}

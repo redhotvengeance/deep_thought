@@ -149,6 +149,8 @@ class DeepThoughtAppTest < MiniTest::Unit::TestCase
   end
 
   def test_app_project_deploy_no_attributes
+    DeepThought::Notifier.stubs(:notify)
+
     project = DeepThought::Project.create(:name => '_test', :repo_url => './test/fixtures/git-test', :deploy_type => 'mock')
 
     assert_equal DeepThought::Deploy.count, 0
@@ -181,6 +183,8 @@ class DeepThoughtAppTest < MiniTest::Unit::TestCase
   end
 
   def test_app_project_deploy_with_attributes
+    DeepThought::Notifier.stubs(:notify)
+
     project = DeepThought::Project.create(:name => '_test', :repo_url => './test/fixtures/git-test', :deploy_type => 'mock')
 
     assert_equal DeepThought::Deploy.count, 0
@@ -217,6 +221,8 @@ class DeepThoughtAppTest < MiniTest::Unit::TestCase
   end
 
   def test_app_project_history
+    DeepThought::Notifier.stubs(:notify)
+
     project = DeepThought::Project.create(:name => '_test', :repo_url => './test/fixtures/git-test', :deploy_type => 'mock')
 
     login(@user_email, @user_password)

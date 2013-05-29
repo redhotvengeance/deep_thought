@@ -84,13 +84,45 @@ module DeepThought
           deploy.finished_at = DateTime.now
           deploy.in_progress = false
 
+          deploy_summary = deploy.project.name
+
+          if deploy.actions
+            actions = YAML.load(deploy.actions)
+            actions.each do |action|
+              deploy_summary += "/#{action}"
+            end
+          end
+
+          deploy_summary += " #{deploy.branch}"
+
+          if deploy.environment
+            deploy_summary += " to #{deploy.environment}"
+
+            if deploy.box
+              deploy_summary += "/#{deploy.box}"
+            end
+          end
+
+          if deploy.variables
+            variables = YAML.load(deploy.variables)
+            variables.each do |k, v|
+              deploy_summary += " #{k}=#{v}"
+            end
+          end
+
           if deploy_status
             deploy.was_successful = true
             deploy.save!
+
+            DeepThought::Notifier.notify(deploy.user, "SUCCESS: #{deploy_summary}")
+
             true
           else
             deploy.was_successful = false
             deploy.save!
+
+            DeepThought::Notifier.notify(deploy.user, "FAILED: #{deploy_summary}")
+
             raise DeploymentFailedError, "The deployment pondered its own short existence before hitting the ground with a sudden wet thud."
           end
         else

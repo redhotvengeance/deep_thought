@@ -12,6 +12,7 @@ require "deep_thought/deployer"
 require "deep_thought/deployer/capistrano"
 require 'deep_thought/ci_service'
 require 'deep_thought/ci_service/janky'
+require 'deep_thought/notifier'
 require "deep_thought/version"
 
 module DeepThought
