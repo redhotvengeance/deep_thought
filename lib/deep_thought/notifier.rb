@@ -2,14 +2,12 @@ require 'httparty'
 
 module DeepThought
   module Notifier
-    include HTTParty
-
-    class << self
-      def notify(user, message)
+    def self.notify(user, message)
+      begin
         HTTParty.post("#{user.notification_url}", :body => {:message => message}.to_json, :headers => {'Content-Type' => 'application/json'})
+      rescue
+        'poop'
       end
-
-      handle_asynchronously :notify
     end
   end
 end

@@ -31,6 +31,11 @@ namespace :jobs do
     Delayed::Worker.new(:min_priority => ENV['MIN_PRIORITY'], :max_priority => ENV['MAX_PRIORITY']).start
   end
 
+  desc "Get number of jobs in the delayed_job queue"
+  task :count => [:environment] do
+    puts Delayed::Job.count
+  end
+
   desc "Clear the delayed_job queue"
   task :clear => [:environment] do
     Delayed::Job.delete_all

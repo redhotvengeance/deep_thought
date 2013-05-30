@@ -1,19 +1,19 @@
-require "active_record"
-require "delayed_job_active_record"
-require "hirefire"
+require 'active_record'
+require 'delayed_job_active_record'
 
-require "deep_thought/app"
-require "deep_thought/api"
-require "deep_thought/models/deploy"
-require "deep_thought/models/project"
-require "deep_thought/models/state"
-require "deep_thought/models/user"
-require "deep_thought/deployer"
-require "deep_thought/deployer/capistrano"
+require 'deep_thought/app'
+require 'deep_thought/api'
+require 'deep_thought/models/deploy'
+require 'deep_thought/models/project'
+require 'deep_thought/models/state'
+require 'deep_thought/models/user'
+require 'deep_thought/deployer'
+require 'deep_thought/deployer/capistrano'
 require 'deep_thought/ci_service'
 require 'deep_thought/ci_service/janky'
 require 'deep_thought/notifier'
-require "deep_thought/version"
+require 'deep_thought/scaler'
+require 'deep_thought/version'
 
 module DeepThought
   def self.setup(settings)
@@ -38,10 +38,6 @@ module DeepThought
 
     if settings['CI_SERVICE']
       DeepThought::CIService.setup(settings)
-    end
-
-    if (settings['HIREFIRE_EMAIL'] && settings['HIREFIRE_EMAIL'] != '') && (settings['HIREFIRE_PASSWORD'] && settings['HIREFIRE_PASSWORD'] != '')
-      HireFire::Initializer.initialize!
     end
   end
 

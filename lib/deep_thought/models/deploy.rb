@@ -12,10 +12,16 @@ module DeepThought
 
     def queue
       Delayed::Job.enqueue self
+
+      DeepThought::Scaler.scale
     end
 
     def perform
       DeepThought::Deployer.execute(self)
+    end
+
+    def max_attempts
+      return 1
     end
   end
 end

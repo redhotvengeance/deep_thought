@@ -1,8 +1,8 @@
-require "sinatra"
+require 'sinatra'
 require 'sinatra/json'
 require 'rack/ssl'
-require "deep_thought/git"
-require "deep_thought/deployer"
+require 'deep_thought/git'
+require 'deep_thought/deployer'
 
 module DeepThought
   class Api < Sinatra::Base

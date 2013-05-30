@@ -1,4 +1,4 @@
-require "deep_thought/git"
+require 'deep_thought/git'
 
 module DeepThought
   module Deployer
