@@ -17,6 +17,7 @@ Gem::Specification.new do |gem|
   gem.test_files    = gem.files.grep(%r{^(test|spec|features)/})
   gem.require_paths = ["lib"]
 
+  gem.add_dependency "rake", "~>10.0.4"
   gem.add_dependency "sinatra", "~>1.4"
   gem.add_dependency "sinatra-contrib", "~>1.4"
   gem.add_dependency "json", "~>1.8"

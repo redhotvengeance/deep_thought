@@ -1,66 +1,25 @@
+$LOAD_PATH.unshift(File.expand_path("../lib", __FILE__))
+
 require "bundler/gem_tasks"
-require "dotenv/tasks"
 require "active_record"
 require "fileutils"
-require "./lib/deep_thought"
 
-task :environment, [:env] => :dotenv do |t, args|
-  if args[:env]
-    ENV['RACK_ENV'] = args[:env]
-  end
+ENV["RACK_ENV"] ||= "development"
 
-  puts "RACK_ENV: #{ENV['RACK_ENV']}"
+require "deep_thought"
 
-  DeepThought.setup(ENV)
-end
+DeepThought.setup(ENV)
 
-desc "Create a user"
-task :create_user, [:email, :password] => [:environment] do |t, args|
-  user = DeepThought::User.create(:email => "#{args[:email]}", :password => "#{args[:password]}", :password_confirmation => "#{args[:password]}")
-
-  if user.errors.count > 0
-    puts "Error when creating new user: #{user.errors.messages}"
-  else
-    puts "Created new user with email: #{user.email}."
-  end
-end
-
-namespace :jobs do
-  desc "Start a delayed_job worker"
-  task :work => [:environment] do
-    Delayed::Worker.new(:min_priority => ENV['MIN_PRIORITY'], :max_priority => ENV['MAX_PRIORITY']).start
-  end
-
-  desc "Get number of jobs in the delayed_job queue"
-  task :count => [:environment] do
-    puts Delayed::Job.count
-  end
-
-  desc "Clear the delayed_job queue"
-  task :clear => [:environment] do
-    Delayed::Job.delete_all
-  end
-end
+require "deep_thought/tasks"
 
 namespace :db do
-  desc "Migrate the database"
-  task :migrate, [:env] => :environment do |t, args|
-    ActiveRecord::Migrator.migrate('db/migrate')
-  end
-
-  desc "Rolls the schema back to the previous version"
-  task :rollback, [:env] => :environment do |t, args|
-    ActiveRecord::Migrator.rollback('db/migrate', 1)
-  end
-
-  desc 'Reset the database'
-  task :reset, [:env] => :environment do |t, args|
-    ActiveRecord::Migrator.down('db/migrate')
-    ActiveRecord::Migrator.migrate('db/migrate')
-  end
-
   desc 'Output the schema to db/schema.rb'
-  task :schema, [:env] => :environment do |t, args|
+  task :schema, [:env] do |t, args|
+    if args[:env]
+      ENV['RACK_ENV'] = args[:env]
+    end
+
+    ActiveRecord::Schema.verbose = true
     File.open('db/schema.rb', 'w') do |f|
       ActiveRecord::SchemaDumper.dump(ActiveRecord::Base.connection, f)
     end
