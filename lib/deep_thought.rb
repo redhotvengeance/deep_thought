@@ -31,7 +31,9 @@ module DeepThought
       :database  => database.path[1..-1],
       :pool      => 5,
       :username  => database.user,
-      :password  => database.password
+      :password  => database.password,
+      :host      => database.host,
+      :port      => database.port
     }
 
     ActiveRecord::Base.establish_connection(connection)
