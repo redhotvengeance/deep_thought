@@ -1,6 +1,15 @@
 # DeepThought
 
-Deploy smart, not hard.
+Deploy smart, not hard.  
+<br/>
+
+---
+
+**
+**Deep Thought is still in the initial hacking phase, and has not yet hit a release point.**
+**
+
+---
 
 ## See
 
