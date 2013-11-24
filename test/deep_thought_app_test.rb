@@ -16,6 +16,10 @@ class DeepThoughtAppTest < MiniTest::Unit::TestCase
     Capybara.reset_sessions!
     Capybara.use_default_driver
 
+    if File.directory?(".projects/_test")
+      FileUtils.rm_rf(".projects/_test")
+    end
+
     DatabaseCleaner.clean
   end
 
@@ -33,20 +37,20 @@ class DeepThoughtAppTest < MiniTest::Unit::TestCase
   def test_app_root_logged_in
     login(@user_email, @user_password)
 
-    assert_equal page.status_code, 200
+    assert_equal 200, page.status_code
     assert_equal "http://www.example.com/", page.current_url
   end
 
   def test_app_logout
     login(@user_email, @user_password)
 
-    assert_equal page.status_code, 200
+    assert_equal 200, page.status_code
     assert_equal "http://www.example.com/", page.current_url
 
     logout
 
     visit '/'
-    assert_equal page.status_code, 200
+    assert_equal 200, page.status_code
     assert_equal "http://www.example.com/login", page.current_url
   end
 
@@ -73,7 +77,7 @@ class DeepThoughtAppTest < MiniTest::Unit::TestCase
 
     login(@user_email, @user_password)
 
-    assert_equal page.status_code, 200
+    assert_equal 200, page.status_code
     assert_equal "http://www.example.com/", page.current_url
   end
 
@@ -153,7 +157,7 @@ class DeepThoughtAppTest < MiniTest::Unit::TestCase
 
     project = DeepThought::Project.create(:name => '_test', :repo_url => './test/fixtures/git-test', :deploy_type => 'mock')
 
-    assert_equal DeepThought::Deploy.count, 0
+    assert_equal 0, DeepThought::Deploy.count
 
     deployer = mock('class')
     deployer.expects(:new).returns(deployer)
@@ -170,16 +174,16 @@ class DeepThoughtAppTest < MiniTest::Unit::TestCase
       click_button 'deploy'
     end
 
-    assert_equal DeepThought::Deploy.count, 1
+    assert_equal 1, DeepThought::Deploy.count
 
     deploy = DeepThought::Deploy.all[0]
 
-    assert_equal deploy.branch, 'master'
-    assert_equal deploy.environment, nil
-    assert_equal deploy.box, nil
-    assert_equal deploy.actions, nil
-    assert_equal deploy.variables, nil
-    assert_equal deploy.via, 'web'
+    assert_equal 'master', deploy.branch
+    assert_nil deploy.environment
+    assert_nil deploy.box
+    assert_nil deploy.actions
+    assert_nil deploy.variables
+    assert_equal 'web', deploy.via
   end
 
   def test_app_project_deploy_with_attributes
@@ -187,7 +191,7 @@ class DeepThoughtAppTest < MiniTest::Unit::TestCase
 
     project = DeepThought::Project.create(:name => '_test', :repo_url => './test/fixtures/git-test', :deploy_type => 'mock')
 
-    assert_equal DeepThought::Deploy.count, 0
+    assert_equal 0, DeepThought::Deploy.count
 
     deployer = mock('class')
     deployer.expects(:new).returns(deployer)
@@ -208,16 +212,16 @@ class DeepThoughtAppTest < MiniTest::Unit::TestCase
       click_button 'deploy'
     end
 
-    assert_equal DeepThought::Deploy.count, 1
+    assert_equal 1, DeepThought::Deploy.count
 
     deploy = DeepThought::Deploy.all[0]
 
-    assert_equal deploy.branch, 'topic'
-    assert_equal deploy.environment, 'development'
-    assert_equal deploy.box, 'dev1'
-    assert_equal deploy.actions, nil
-    assert_equal deploy.variables, nil
-    assert_equal deploy.via, 'web'
+    assert_equal 'topic', deploy.branch
+    assert_equal 'development', deploy.environment
+    assert_equal 'dev1', deploy.box
+    assert_nil deploy.actions
+    assert_nil deploy.variables
+    assert_equal 'web', deploy.via
   end
 
   def test_app_project_history
@@ -263,9 +267,9 @@ class DeepThoughtAppTest < MiniTest::Unit::TestCase
 
     visit "/projects/edit/test"
 
-    assert_equal find_field('name').value, 'test'
-    assert_equal find_field('repo').value, 'repo'
-    assert_equal find_field('type').value, 'type'
+    assert_equal 'test', find_field('name').value
+    assert_equal 'repo', find_field('repo').value
+    assert_equal 'type', find_field('type').value
     assert page.has_select?('project[ci]', :selected => 'true')
   end
 
@@ -284,21 +288,21 @@ class DeepThoughtAppTest < MiniTest::Unit::TestCase
 
     visit "/projects/edit/test"
     within(".content > form") do
-      fill_in 'name', :with => 'test2'
-      fill_in 'repo', :with => 'repo2'
-      fill_in 'type', :with => 'type2'
+      fill_in 'name', :with => '_test'
+      fill_in 'repo', :with => './test/fixtures/git-test'
+      fill_in 'type', :with => 'type'
       select('false', :from => 'project[ci]')
       click_button 'update project'
     end
 
-    assert_equal "http://www.example.com/projects/test2", page.current_url
-    assert page.has_content?('Now pondering: test2')
+    assert_equal "http://www.example.com/projects/_test", page.current_url
+    assert page.has_content?('Now pondering: _test')
 
-    visit "/projects/edit/test2"
+    visit "/projects/edit/_test"
 
-    assert_equal find_field('name').value, 'test2'
-    assert_equal find_field('repo').value, 'repo2'
-    assert_equal find_field('type').value, 'type2'
+    assert_equal '_test', find_field('name').value
+    assert_equal './test/fixtures/git-test', find_field('repo').value
+    assert_equal 'type', find_field('type').value
     assert page.has_select?('project[ci]', :selected => 'false')
   end
 
@@ -307,16 +311,16 @@ class DeepThoughtAppTest < MiniTest::Unit::TestCase
 
     visit "/projects/add/new"
     within(".content > form") do
-      fill_in 'name', :with => 'test'
-      fill_in 'repo', :with => 'repo'
+      fill_in 'name', :with => '_test'
+      fill_in 'repo', :with => './test/fixtures/git-test'
       fill_in 'type', :with => 'type'
       click_button 'create project'
     end
 
-    assert page.has_content?('test')
+    assert page.has_content?('_test')
 
     within(".list") do
-      click_link 'test'
+      click_link '_test'
     end
 
     click_link 'edit...'
@@ -324,6 +328,6 @@ class DeepThoughtAppTest < MiniTest::Unit::TestCase
     click_button 'delete project'
 
     assert_equal "http://www.example.com/", page.current_url
-    assert !page.has_content?('test')
+    assert !page.has_content?('_test')
   end
 end

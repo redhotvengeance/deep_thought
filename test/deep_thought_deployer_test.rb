@@ -31,7 +31,7 @@ class DeepThoughtDeployerTest < MiniTest::Unit::TestCase
     assert @deploy.save
     assert @deploy.started_at
     assert @deploy.finished_at
-    assert_equal @deploy.was_successful, true
+    assert @deploy.was_successful
   end
 
   def test_deployer_execute_failed
@@ -46,7 +46,7 @@ class DeepThoughtDeployerTest < MiniTest::Unit::TestCase
     assert_raises(DeepThought::Deployer::DeploymentFailedError) { @deploy.save }
     assert @deploy.started_at
     assert @deploy.finished_at
-    assert_equal @deploy.was_successful, false
+    assert !@deploy.was_successful
   end
 
   def test_deployer_lock

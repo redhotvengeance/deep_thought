@@ -46,6 +46,6 @@ class DeepThoughtGitTest < MiniTest::Unit::TestCase
   end
 
   def test_git_get_list_of_branches
-    assert_equal(DeepThought::Git.get_list_of_branches(@project), ['master', 'topic'])
+    assert_equal ['master', 'topic'], DeepThought::Git.get_list_of_branches(@project)
   end
 end

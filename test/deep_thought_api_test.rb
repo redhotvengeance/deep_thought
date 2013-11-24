@@ -29,7 +29,7 @@ class DeepThoughtApiTest < MiniTest::Unit::TestCase
     header 'Accept', 'application/json'
     get '/deploy/'
     assert !last_response.ok?
-    assert_equal last_response.status, 401
+    assert_equal 401, last_response.status
   end
 
   def test_api_get
