@@ -38,7 +38,7 @@ module DeepThought
 
     def generate_password_digest
       if self.password && self.password != ''
-        self.password_digest = BCrypt::Password.create(self.password, :cost => 12)
+        self.password_digest = BCrypt::Password.create(self.password)
       end
     end
   end

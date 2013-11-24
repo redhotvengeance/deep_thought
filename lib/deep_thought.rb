@@ -38,6 +38,8 @@ module DeepThought
 
     ActiveRecord::Base.establish_connection(connection)
 
+    BCrypt::Engine.cost = 12
+
     if settings['CI_SERVICE']
       DeepThought::CIService.setup(settings)
     end

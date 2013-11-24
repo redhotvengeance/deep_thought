@@ -22,6 +22,8 @@ Capybara.app = DeepThought::App
 DatabaseCleaner.clean_with(:truncation)
 DatabaseCleaner.strategy = :transaction
 
+BCrypt::Engine.cost = BCrypt::Engine::MIN_COST
+
 Delayed::Worker.delay_jobs = false
 
 def login(email, password)
