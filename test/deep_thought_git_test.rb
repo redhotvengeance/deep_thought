@@ -30,11 +30,11 @@ class DeepThoughtGitTest < MiniTest::Unit::TestCase
   end
 
   def test_git_get_latest_commit_for_branch_success
-    assert_kind_of Array, DeepThought::Git.get_latest_commit_for_branch(@project, 'master')
+    assert_kind_of String, DeepThought::Git.get_latest_commit_for_branch(@project, 'master')
   end
 
   def test_git_get_latest_commit_for_branch_failed
-    assert_empty DeepThought::Git.get_latest_commit_for_branch(@project, 'no-branch')
+    assert_raises(DeepThought::Git::GitBranchNotFoundError) { DeepThought::Git.switch_to_branch(@project, 'no-branch') }
   end
 
   def test_git_switch_to_branch_success

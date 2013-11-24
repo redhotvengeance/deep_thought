@@ -30,17 +30,7 @@ module DeepThought
         raise DeploymentInProgressError, "Sorry, but I'm currently in mid-deployment. Ask me again when I'm done."
       end
 
-      hashes = Git.get_latest_commit_for_branch(project, branch)
-
-      if !hashes
-        raise DeepThought::Git::GitRepositoryNotFoundError, "I can't seem to access that repo. Are you sure the URL is correct and that I have access to it?"
-      end
-
-      hash = hashes[0]
-
-      if !hash
-        raise DeepThought::Git::GitBranchNotFoundError, "#{project.name} doesn't appear to have a branch called #{branch}. Have you pushed it?"
-      end
+      hash = Git.get_latest_commit_for_branch(project, branch)
 
       if DeepThought::CIService.ci_service
         if project.ci

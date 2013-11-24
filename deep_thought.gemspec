@@ -23,7 +23,7 @@ Gem::Specification.new do |gem|
   gem.add_dependency "json", "~>1.8"
   gem.add_dependency "activerecord", "~>3.2"
   gem.add_dependency "pg", "~>0.17"
-  gem.add_dependency "grit", "~>2.5"
+  gem.add_dependency "rugged", "~>0.19"
   gem.add_dependency "httparty", "~>0.12"
   gem.add_dependency "bcrypt-ruby", "~>3.1"
   gem.add_dependency "rack-ssl", "~>1.3"

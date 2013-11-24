@@ -1,4 +1,4 @@
-require 'grit'
+require 'rugged'
 
 module DeepThought
   module Git
@@ -24,33 +24,33 @@ module DeepThought
     end
 
     def self.get_list_of_branches(project)
-      return nil if !self.clone_if_not_exists(project)
+      self.clone_if_not_exists(project)
 
       system "cd ./.projects/#{project.name} && git fetch -p > /dev/null 2>&1"
 
-      repo = Grit::Repo.new(".projects/#{project.name}")
+      repo = Rugged::Repository.new(".projects/#{project.name}")
 
-      branches = Array.new
-
-      repo.remotes.each do |remote|
-        branch = remote.name.gsub(/origin\//, '')
-        branches.push(branch) if branch != 'HEAD'
-      end
+      branches = Rugged::Branch.each_name(repo, :remote).sort
+      branches.map! { |x| x.sub!('origin/', '') }
+      branches.delete('HEAD')
 
       branches
     end
 
     def self.get_latest_commit_for_branch(project, branch)
-      return nil if !self.clone_if_not_exists(project)
+      self.clone_if_not_exists(project)
 
       system "cd ./.projects/#{project.name} && git fetch -p > /dev/null 2>&1"
 
-      repo = Grit::Repo.new(".projects/#{project.name}")
-      repo.commits("origin/#{branch}", 1)
+      repo = Rugged::Repository.new(".projects/#{project.name}")
+
+      switch_to_branch(project, branch)
+
+      repo.head.target
     end
 
     def self.switch_to_branch(project, branch)
-      return nil if !self.clone_if_not_exists(project)
+      self.clone_if_not_exists(project)
 
       exit_status = system "cd ./.projects/#{project.name} && git fetch -p > /dev/null 2>&1 && git reset --hard origin/#{branch} > /dev/null 2>&1"
 
@@ -66,11 +66,9 @@ module DeepThought
     def self.clone_if_not_exists(project)
       if !File.directory?(".projects/#{project.name}/.git")
         if !self.setup(project)
-          return false
+          raise DeepThought::Git::GitRepositoryNotFoundError, "I can't seem to access that repo. Are you sure the URL is correct and that I have access to it?"
         end
       end
-
-      true
     end
   end
 end
