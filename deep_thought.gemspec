@@ -17,29 +17,29 @@ Gem::Specification.new do |gem|
   gem.test_files    = gem.files.grep(%r{^(test|spec|features)/})
   gem.require_paths = ["lib"]
 
-  gem.add_dependency "rake", "~>10.0.4"
+  gem.add_dependency "rake", "~>10.1"
   gem.add_dependency "sinatra", "~>1.4"
   gem.add_dependency "sinatra-contrib", "~>1.4"
   gem.add_dependency "json", "~>1.8"
   gem.add_dependency "activerecord", "~>3.2"
-  gem.add_dependency "pg", "~>0.15"
+  gem.add_dependency "pg", "~>0.17"
   gem.add_dependency "grit", "~>2.5"
-  gem.add_dependency "httparty", "~>0.11"
-  gem.add_dependency "bcrypt-ruby", "~>3.0"
+  gem.add_dependency "httparty", "~>0.12"
+  gem.add_dependency "bcrypt-ruby", "~>3.1"
   gem.add_dependency "rack-ssl", "~>1.3"
   gem.add_dependency "rack_csrf", "~>2.4"
   gem.add_dependency "haml", "~>4.0"
   gem.add_dependency "delayed_job_active_record", "~>0.4"
 
-  # development
+  # # development
   gem.add_development_dependency "shotgun", "~>0.9"
-  gem.add_development_dependency "thin", "~>1.5"
+  gem.add_development_dependency "thin", "~>1.6"
   gem.add_development_dependency "tux", "~>0.3"
 
-  # testing
+  # # testing
   gem.add_development_dependency "minitest", "~>4.7"
-  gem.add_development_dependency "mocha", "~>0.13"
-  gem.add_development_dependency "database_cleaner", "~>0.9"
+  gem.add_development_dependency "mocha", "~>0.14"
+  gem.add_development_dependency "database_cleaner", "~>1.2"
   gem.add_development_dependency "turn", "~>0.9"
-  gem.add_development_dependency "capybara", "~>2.1"
+  gem.add_development_dependency "capybara", "~>2.2"
 end
