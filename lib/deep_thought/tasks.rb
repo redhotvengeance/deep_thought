@@ -36,31 +36,19 @@ module DeepThought
 
     namespace :db do
       desc "Migrate the database"
-      task :migrate, [:env] do |t, args|
-        if args[:env]
-          ENV['RACK_ENV'] = args[:env]
-        end
-
+      task :migrate do
         ActiveRecord::Migration.verbose = true
         ActiveRecord::Migrator.migrate('db/migrate')
       end
 
       desc "Rolls the schema back to the previous version"
-      task :rollback, [:env] do |t, args|
-        if args[:env]
-          ENV['RACK_ENV'] = args[:env]
-        end
-
+      task :rollback do
         ActiveRecord::Migration.verbose = true
         ActiveRecord::Migrator.rollback('db/migrate', 1)
       end
 
       desc 'Reset the database'
-      task :reset, [:env] do |t, args|
-        if args[:env]
-          ENV['RACK_ENV'] = args[:env]
-        end
-
+      task :reset do
         ActiveRecord::Migration.verbose = true
         ActiveRecord::Migrator.down('db/migrate')
         ActiveRecord::Migrator.migrate('db/migrate')

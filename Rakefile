@@ -14,11 +14,7 @@ require "deep_thought/tasks"
 
 namespace :db do
   desc 'Output the schema to db/schema.rb'
-  task :schema, [:env] do |t, args|
-    if args[:env]
-      ENV['RACK_ENV'] = args[:env]
-    end
-
+  task :schema do
     ActiveRecord::Schema.verbose = true
     File.open('db/schema.rb', 'w') do |f|
       ActiveRecord::SchemaDumper.dump(ActiveRecord::Base.connection, f)
