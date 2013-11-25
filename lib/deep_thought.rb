@@ -8,7 +8,6 @@ require 'deep_thought/models/project'
 require 'deep_thought/models/state'
 require 'deep_thought/models/user'
 require 'deep_thought/deployer'
-require 'deep_thought/deployer/capistrano'
 require 'deep_thought/ci_service'
 require 'deep_thought/ci_service/janky'
 require 'deep_thought/notifier'
@@ -57,6 +56,5 @@ module DeepThought
     }
   end
 
-  DeepThought::Deployer.register_adapter('capistrano', DeepThought::Deployer::Capistrano)
   DeepThought::CIService.register_adapter('janky', DeepThought::CIService::Janky)
 end
