@@ -6,20 +6,24 @@ module DeepThought
     class GitBranchNotFoundError < StandardError; end
 
     def self.setup(project)
-      exit_status = system "git clone #{project.repo_url} .projects/#{project.name} > /dev/null 2>&1"
+      if !File.directory?(".projects/#{project.name}/.git")
+        exit_status = system "git clone #{project.repo_url} .projects/#{project.name} > /dev/null 2>&1"
 
-      if exit_status
-        if !File.directory?(".projects/#{project.name}/.git")
-          false
-        else
-          if Dir.entries(".projects/#{project.name}") == [".", "..", ".git"]
+        if exit_status
+          if !File.directory?(".projects/#{project.name}/.git")
             false
           else
-            true
+            if Dir.entries(".projects/#{project.name}") == [".", "..", ".git"]
+              false
+            else
+              true
+            end
           end
+        else
+          false
         end
       else
-        false
+        true
       end
     end
 
@@ -64,10 +68,8 @@ module DeepThought
     private
 
     def self.clone_if_not_exists(project)
-      if !File.directory?(".projects/#{project.name}/.git")
-        if !self.setup(project)
-          raise DeepThought::Git::GitRepositoryNotFoundError, "I can't seem to access that repo. Are you sure the URL is correct and that I have access to it?"
-        end
+      if !self.setup(project)
+        raise DeepThought::Git::GitRepositoryNotFoundError, "I can't seem to access that repo. Are you sure the URL is correct and that I have access to it?"
       end
     end
   end

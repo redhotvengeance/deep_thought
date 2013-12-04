@@ -126,18 +126,16 @@ module DeepThought
 
       if data
         repo_url = data['repo_url'] if data['repo_url']
-        deploy_type = data['deploy_type'] if data['deploy_type']
-        ci = data['ci'] || 'true'
       end
 
-      if !repo_url || !deploy_type
-        return [500, "Sorry, but I need a project name, repo url, and deploy type. No exceptions, despite how nicely you ask."]
+      if !repo_url
+        return [500, "Sorry, but I need a project name and repo url. No exceptions, despite how nicely you ask."]
       end
 
-      project = Project.new(:name => app, :repo_url => repo_url, :deploy_type => deploy_type, :ci => ci)
+      project = Project.new(:name => app, :repo_url => repo_url)
 
       if project.save
-        [200, "Set up new project called #{app} which deploys with #{deploy_type} and pulls from #{repo_url} and #{if ci == 'true' then 'uses' else 'doesn\'t use' end} ci."]
+        [200, "Set up new project called #{app} which pulls from #{repo_url}."]
       else
         [422, "Shit, something went wrong: #{project.errors.messages}."]
       end

@@ -1,3 +1,4 @@
+require 'yaml'
 require 'deep_thought/git'
 
 module DeepThought
@@ -30,11 +31,22 @@ module DeepThought
         raise DeploymentInProgressError, "Sorry, but I'm currently in mid-deployment. Ask me again when I'm done."
       end
 
+      project.setup
+
       hash = Git.get_latest_commit_for_branch(project, branch)
 
+      project_config = YAML.load_file(".projects/#{project.name}/.deepthought.yml")
+
+      if project_config['ci']
+        uses_ci = project_config['ci']['enabled'] || false
+      else
+        uses_ci = false
+      end
+
       if DeepThought::CIService.ci_service
-        if project.ci
-          if !DeepThought::CIService.is_branch_green?(project.name, branch, hash)
+        if uses_ci
+          ci_project_name = project_config['ci']['name'] || project.name
+          if !DeepThought::CIService.is_branch_green?(ci_project_name, branch, hash)
             raise DeepThought::CIService::CIBuildNotGreenError, "Commit #{hash} on project #{app} (in branch #{branch}) is not green. Fix it before deploying."
           end
         end
@@ -58,15 +70,21 @@ module DeepThought
       if !is_deploying?
         Git.switch_to_branch(deploy.project, deploy.branch)
 
-        if @adapters.keys.include?(deploy.project['deploy_type'])
+        deploy.project.setup
+
+        project_config = YAML.load_file(".projects/#{deploy.project.name}/.deepthought.yml")
+        deploy_type = project_config['deploy_type'] || 'shell'
+
+        if @adapters.keys.include?(deploy_type)
           lock_deployer
 
           deploy.started_at = DateTime.now
           deploy.in_progress = true
           deploy.save!
 
-          klass = adapters[deploy.project['deploy_type']]
+          klass = adapters[deploy_type]
           deployer = klass.new
+          deployer.setup(deploy.project, project_config)
           deploy_status = deployer.execute(deploy)
 
           unlock_deployer
@@ -116,7 +134,7 @@ module DeepThought
             raise DeploymentFailedError, "The deployment pondered its own short existence before hitting the ground with a sudden wet thud."
           end
         else
-          raise DeployerNotFoundError, "I don't have a deployer called \"#{deploy.project['deploy_type']}\"."
+          raise DeployerNotFoundError, "I don't have a deployer called \"#{deploy_type}\"."
         end
       else
         raise DeploymentInProgressError, "Sorry, but I'm currently in mid-deployment. Ask me again when I'm done."

@@ -1,6 +1,8 @@
 require 'fileutils'
 
 module DeepThought
+  class ProjectConfigNotFoundError < StandardError; end
+
   class Project < ActiveRecord::Base
     has_many :deploys
 
@@ -8,9 +10,18 @@ module DeepThought
 
     validates :name, presence: true, uniqueness: true
     validates :repo_url, presence: true
-    validates :deploy_type, presence: true
 
-    private
+    def setup
+      if DeepThought::Git.setup(self)
+        if !File.exists?(".projects/#{self.name}/.deepthought.yml")
+          delete_repo
+
+          raise DeepThought::ProjectConfigNotFoundError, "#{self.name} does not appear to have a .deepthought.yml config file. Add one and try again."
+        end
+      else
+        raise DeepThought::Git::GitRepositoryNotFoundError, "I can't seem to access that repo. Are you sure the URL is correct and that I have access to it?"
+      end
+    end
 
     def delete_repo
       if File.directory?(".projects/#{self.name}")
