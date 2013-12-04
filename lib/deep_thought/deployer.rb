@@ -72,7 +72,7 @@ module DeepThought
 
         deploy.project.setup
 
-        project_config = YAML.load_file(".projects/#{deploy.project.name}/.deepthought.yml")
+        project_config = YAML.load_file(".projects/#{deploy.project.name}/.deepthought.yml") || {}
         deploy_type = project_config['deploy_type'] || 'shell'
 
         if @adapters.keys.include?(deploy_type)
@@ -85,7 +85,7 @@ module DeepThought
           klass = adapters[deploy_type]
           deployer = klass.new
           deployer.setup(deploy.project, project_config)
-          deploy_status = deployer.execute(deploy)
+          deploy_status = deployer.execute(deploy, project_config)
 
           unlock_deployer
 
