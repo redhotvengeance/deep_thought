@@ -8,7 +8,12 @@ class DeepThoughtProjectTest < MiniTest::Unit::TestCase
       FileUtils.rm_rf(".projects/_test")
     end
 
-    @project = DeepThought::Project.create(:name => '_test', :repo_url => './test/fixtures/git-test', :deploy_type => 'capy')
+    deployer = mock('class')
+    deployer.stubs(:new).returns(deployer)
+    deployer.stubs(:setup)
+    DeepThought::Deployer.register_adapter('mock', deployer)
+
+    @project = DeepThought::Project.create(:name => '_test', :repo_url => './test/fixtures/project-test')
   end
 
   def teardown
@@ -20,12 +25,10 @@ class DeepThoughtProjectTest < MiniTest::Unit::TestCase
   end
 
   def test_project_destroy_deletes_repo
-    DeepThought::Git.setup(@project)
-
-    assert File.directory?(".projects/_test")
+    FileUtils.mkdir_p(".projects/#{@project.name}")
 
     @project.destroy
 
-    assert !File.directory?(".projects/_test")
+    assert !File.directory?(".projects/#{@project.name}")
   end
 end

@@ -10,6 +10,11 @@ class DeepThoughtApiTest < MiniTest::Unit::TestCase
       FileUtils.rm_rf(".projects/_test")
     end
 
+    deployer = mock('class')
+    deployer.stubs(:new).returns(deployer)
+    deployer.stubs(:setup)
+    DeepThought::Deployer.register_adapter('mock', deployer)
+
     @user = DeepThought::User.create(:email => 'test@test.com', :password => 'secret', :password_confirmation => 'secret', :api_key => '12345')
   end
 
@@ -48,26 +53,26 @@ class DeepThoughtApiTest < MiniTest::Unit::TestCase
 
   def test_api_setup_success
     header 'Accept', 'application/json'
-    post '/deploy/setup/test', {:repo_url => 'http://fake.url', :deploy_type => 'capy'}.to_json, {"HTTP_AUTHORIZATION" => 'Token token="12345"'}
+    post '/deploy/setup/_test', {:repo_url => './test/fixtures/project-test'}.to_json, {"HTTP_AUTHORIZATION" => 'Token token="12345"'}
     assert last_response.ok?
   end
 
   def test_api_setup_failed
     header 'Accept', 'application/json'
-    post '/deploy/setup/test', {}, {"HTTP_AUTHORIZATION" => 'Token token="12345"'}
+    post '/deploy/setup/_test', {}, {"HTTP_AUTHORIZATION" => 'Token token="12345"'}
     assert !last_response.ok?
-    assert_equal "Sorry, but I need a project name, repo url, and deploy type. No exceptions, despite how nicely you ask.", last_response.body
+    assert_equal "Sorry, but I need a project name and repo url. No exceptions, despite how nicely you ask.", last_response.body
   end
 
   def test_api_non_project
     header 'Accept', 'application/json'
-    post '/deploy/test', {}, {"HTTP_AUTHORIZATION" => 'Token token="12345"'}
+    post '/deploy/_test', {}, {"HTTP_AUTHORIZATION" => 'Token token="12345"'}
     assert !last_response.ok?
     assert_equal "Hmm, that project doesn't appear to exist. Have you set it up?", last_response.body
   end
 
   def test_api_no_repo
-    project = DeepThought::Project.create(:name => '_test', :repo_url => 'http://fake.url', :deploy_type => 'capy')
+    project = DeepThought::Project.create(:name => '_test', :repo_url => 'http://fake.url')
     header 'Accept', 'application/json'
     post '/deploy/_test', {}, {"HTTP_AUTHORIZATION" => 'Token token="12345"'}
     assert !last_response.ok?
@@ -75,7 +80,7 @@ class DeepThoughtApiTest < MiniTest::Unit::TestCase
   end
 
   def test_api_no_branch
-    project = DeepThought::Project.create(:name => '_test', :repo_url => './test/fixtures/git-test', :deploy_type => 'capy')
+    project = DeepThought::Project.create(:name => '_test', :repo_url => './test/fixtures/project-test')
     branch = 'no-branch'
     header 'Accept', 'application/json'
     post '/deploy/_test', {:branch => branch}.to_json, {"HTTP_AUTHORIZATION" => 'Token token="12345"'}
@@ -85,7 +90,7 @@ class DeepThoughtApiTest < MiniTest::Unit::TestCase
 
   def test_api_in_deployment
     DeepThought::Deployer.lock_deployer
-    project = DeepThought::Project.create(:name => '_test', :repo_url => 'http://fake.url', :deploy_type => 'capy')
+    project = DeepThought::Project.create(:name => '_test', :repo_url => './test/fixtures/project-test')
     header 'Accept', 'application/json'
     post '/deploy/_test', {}, {"HTTP_AUTHORIZATION" => 'Token token="12345"'}
     assert !last_response.ok?
