@@ -38,21 +38,28 @@ module DeepThought
       desc "Migrate the database"
       task :migrate do
         ActiveRecord::Migration.verbose = true
-        ActiveRecord::Migrator.migrate('db/migrate')
+        ActiveRecord::Migrator.migrate(db("migrate"))
       end
 
       desc "Rolls the schema back to the previous version"
       task :rollback do
         ActiveRecord::Migration.verbose = true
-        ActiveRecord::Migrator.rollback('db/migrate', 1)
+        ActiveRecord::Migrator.rollback(db("migrate"), 1)
       end
 
       desc 'Reset the database'
       task :reset do
         ActiveRecord::Migration.verbose = true
-        ActiveRecord::Migrator.down('db/migrate')
-        ActiveRecord::Migrator.migrate('db/migrate')
+        ActiveRecord::Migrator.down(db("migrate"))
+        ActiveRecord::Migrator.migrate(db("migrate"))
       end
+    end
+
+    private
+
+    def self.db(action = '')
+      @db ||= Pathname(__FILE__).expand_path.join("../../../db")
+      @db.join(action).to_s
     end
   end
 end
