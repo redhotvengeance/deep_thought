@@ -1,10 +1,8 @@
+require 'deep_thought/deployer/deployer'
+
 module DeepThought
   module Deployer
-    class Shell
-      def setup(project, config)
-
-      end
-
+    class Shell < DeepThought::Deployer::Deployer
       def execute(deploy, config)
         environment = deploy.environment || "development"
 
