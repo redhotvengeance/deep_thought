@@ -12,7 +12,7 @@ class DeepThoughtApiTest < MiniTest::Unit::TestCase
 
     deployer = mock('class')
     deployer.stubs(:new).returns(deployer)
-    deployer.stubs(:setup)
+    deployer.stubs(:setup?).returns(true)
     DeepThought::Deployer.register_adapter('mock', deployer)
 
     @user = DeepThought::User.create(:email => 'test@test.com', :password => 'secret', :password_confirmation => 'secret', :api_key => '12345')

@@ -10,7 +10,7 @@ class DeepThoughtProjectTest < MiniTest::Unit::TestCase
 
     deployer = mock('class')
     deployer.stubs(:new).returns(deployer)
-    deployer.stubs(:setup)
+    deployer.stubs(:setup?)
     DeepThought::Deployer.register_adapter('mock', deployer)
 
     @project = DeepThought::Project.create(:name => '_test', :repo_url => './test/fixtures/project-test')

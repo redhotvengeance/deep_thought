@@ -3,7 +3,7 @@ require 'deep_thought/deployer/deployer'
 module DeepThought
   module Deployer
     class Shell < DeepThought::Deployer::Deployer
-      def execute(deploy, config)
+      def execute?(deploy, config)
         environment = deploy.environment || "development"
 
         root = config['root'] || "script/deploy"

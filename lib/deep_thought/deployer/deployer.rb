@@ -7,10 +7,12 @@ module DeepThought
         end
       end
 
-      def setup(project, config)
+      def setup?(project, config)
+        true
       end
 
-      def execute(deploy, config)
+      def execute?(deploy, config)
+        true
       end
     end
   end

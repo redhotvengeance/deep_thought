@@ -8,7 +8,7 @@ class DeepThoughtShellTest < MiniTest::Unit::TestCase
 
     deployer = mock('class')
     deployer.stubs(:new).returns(deployer)
-    deployer.stubs(:setup)
+    deployer.stubs(:setup?).returns(true)
     DeepThought::Deployer.register_adapter('mock', deployer)
 
     @project = DeepThought::Project.create(:name => '_test', :repo_url => './test/fixtures/project-test')
@@ -25,14 +25,14 @@ class DeepThoughtShellTest < MiniTest::Unit::TestCase
 
   def test_shell_execute_success
     @project.setup
-    assert @deployer.execute(@deploy, {})
+    assert @deployer.execute?(@deploy, {})
     assert @deploy.log
   end
 
   def test_shell_execute_failed
     @project.setup
     @deploy.actions = ['fail_test'].to_yaml
-    assert !@deployer.execute(@deploy, {})
+    assert !@deployer.execute?(@deploy, {})
     assert @deploy.log
   end
 end

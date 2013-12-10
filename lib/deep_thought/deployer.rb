@@ -4,6 +4,7 @@ require 'deep_thought/git'
 module DeepThought
   module Deployer
     class DeployerNotFoundError < StandardError; end
+    class DeployerSetupFailedError < StandardError; end
     class DeploymentFailedError < StandardError; end
     class DeploymentInProgressError < StandardError; end
 
@@ -84,8 +85,12 @@ module DeepThought
 
           klass = adapters[deploy_type]
           deployer = klass.new
-          deployer.setup(deploy.project, project_config)
-          deploy_status = deployer.execute(deploy, project_config)
+
+          if !deployer.setup?(deploy.project, project_config)
+            raise DeployerSetupFailedError, "Deployer setup failed - check the deployer and project settings."
+          end
+
+          deploy_status = deployer.execute?(deploy, project_config)
 
           unlock_deployer
 

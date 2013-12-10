@@ -9,8 +9,8 @@ class DeepThoughtAppTest < MiniTest::Unit::TestCase
 
     @deployer = mock('class')
     @deployer.stubs(:new).returns(@deployer)
-    @deployer.stubs(:setup)
-    @deployer.stubs(:execute).returns(true)
+    @deployer.stubs(:setup?).returns(true)
+    @deployer.stubs(:execute?).returns(true)
     DeepThought::Deployer.register_adapter('mock', @deployer)
 
     @user_email = 'test@test.com'

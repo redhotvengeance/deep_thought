@@ -8,7 +8,7 @@ class DeepThoughtDeployerTest < MiniTest::Unit::TestCase
 
     @deployer = mock('class')
     @deployer.stubs(:new).returns(@deployer)
-    @deployer.stubs(:setup)
+    @deployer.stubs(:setup?).returns(true)
     DeepThought::Deployer.register_adapter('mock', @deployer)
 
     @project = DeepThought::Project.create(:name => '_test', :repo_url => './test/fixtures/project-test')
@@ -31,11 +31,17 @@ class DeepThoughtDeployerTest < MiniTest::Unit::TestCase
     assert_raises(DeepThought::Deployer::DeployerNotFoundError) { @deploy.save }
   end
 
+  def test_deployer_setup_failed
+    @deployer.stubs(:setup?).returns(false)
+    @deploy.branch = 'mock'
+    assert_raises(DeepThought::Deployer::DeployerSetupFailedError) { @deploy.save }
+  end
+
   def test_deployer_execute_success
     @deploy.branch = 'mock'
 
     DeepThought::Notifier.stubs(:notify)
-    @deployer.expects(:execute).with(@deploy, {'deploy_type' => 'mock'}).returns(true)
+    @deployer.expects(:execute?).with(@deploy, {'deploy_type' => 'mock'}).returns(true)
 
     assert !@deploy.started_at
     assert !@deploy.finished_at
@@ -51,7 +57,7 @@ class DeepThoughtDeployerTest < MiniTest::Unit::TestCase
     @deploy.branch = 'mock'
 
     DeepThought::Notifier.stubs(:notify)
-    @deployer.expects(:execute).with(@deploy, {'deploy_type' => 'mock'}).returns(false)
+    @deployer.expects(:execute?).with(@deploy, {'deploy_type' => 'mock'}).returns(false)
 
     assert !@deploy.started_at
     assert !@deploy.finished_at
@@ -66,7 +72,7 @@ class DeepThoughtDeployerTest < MiniTest::Unit::TestCase
 
   def test_deployer_lock
     DeepThought::Deployer.lock_deployer
-    @deployer.stubs(:execute).with(@deploy).returns(true)
+    @deployer.stubs(:execute?).with(@deploy).returns(true)
     assert_raises(DeepThought::Deployer::DeploymentInProgressError) { @deploy.save }
   end
 end
