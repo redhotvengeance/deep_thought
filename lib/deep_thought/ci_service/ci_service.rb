@@ -9,10 +9,12 @@ module DeepThought
         end
       end
 
-      def setup(settings)
+      def setup?(settings)
         @endpoint = settings['CI_SERVICE_ENDPOINT']
         @username = settings['CI_SERVICE_USERNAME']
         @password = settings['CI_SERVICE_PASSWORD']
+
+        true
       end
 
       def is_branch_green?(app, branch, hash)

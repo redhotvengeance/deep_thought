@@ -12,7 +12,7 @@ class DeepThoughtJankyTest < MiniTest::Unit::TestCase
   end
 
   def test_janky_setup_success
-    @janky.setup({"CI_SERVICE_ENDPOINT" => "endpoint", "CI_SERVICE_USERNAME" => "username", "CI_SERVICE_PASSWORD" => "password"})
+    @janky.setup?({"CI_SERVICE_ENDPOINT" => "endpoint", "CI_SERVICE_USERNAME" => "username", "CI_SERVICE_PASSWORD" => "password"})
 
     assert @janky.endpoint == 'endpoint'
     assert @janky.username == 'username'

@@ -1,6 +1,7 @@
 module DeepThought
   module CIService
     class CIServiceNotFoundError < StandardError; end
+    class CIServiceSetupFailedError < StandardError; end
     class CIBuildNotGreenError < StandardError; end
     class CIProjectAccessError < StandardError; end
 
@@ -21,7 +22,10 @@ module DeepThought
         if @adapters.keys.include?(settings['CI_SERVICE'])
           klass = adapters[settings['CI_SERVICE']]
           @ci_service = klass.new
-          @ci_service.setup(settings)
+
+          if !@ci_service.setup?(settings)
+            raise CIServiceSetupFailedError, "CI service setup failed - check the CI service and project settings."
+          end
         else
           raise CIServiceNotFoundError, "I don't have a CI service called \"#{settings['CI_SERVICE']}\"."
         end
