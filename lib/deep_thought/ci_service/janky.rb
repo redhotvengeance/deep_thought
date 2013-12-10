@@ -1,16 +1,9 @@
 require 'httparty'
+require 'deep_thought/ci_service/ci_service'
 
 module DeepThought
   module CIService
-    class Janky
-      attr_accessor :endpoint, :username, :password
-
-      def setup(settings)
-        @endpoint = settings['CI_SERVICE_ENDPOINT']
-        @username = settings['CI_SERVICE_USERNAME']
-        @password = settings['CI_SERVICE_PASSWORD']
-      end
-
+    class Janky < DeepThought::CIService::CIService
       def is_branch_green?(app, branch, hash)
         is_green = false
 
