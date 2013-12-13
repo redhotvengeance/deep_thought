@@ -6,7 +6,7 @@ Deploy smart, not hard.
 
 Deep Thought takes all of the thought out of deploying.
 
-Want to prevent deployment conflicts? Deep Thought does that. Want to deploy with Hubot? Deep Thought has you covered. Looking to ensure a build is green before it is deployed? Deep Thought yawns at your puny requests. Want a web interface? Got it. An API? Yep. Security? Totally locked down. Deep Thought is master of your deployments.
+Want to prevent deployment conflicts? Deep Thought does that. Want to deploy with Hubot? Deep Thought has you covered. Looking to ensure a build is green before it is deployed? Deep Thought yawns at your puny requests. How about deployment locking? Of course! Want a web interface? Got it. An API? Yep. Security? Totally locked down. Deep Thought is master of your deployments.
 
 Deep Thought was inspired by GitHub's own Hubot+Heaven workflow. Check out [Zach Holman's talk](http://zachholman.com/talk/unsucking-your-teams-development-environment/) to see the original inspiration.
 
