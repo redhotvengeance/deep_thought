@@ -10,7 +10,7 @@ Gem::Specification.new do |gem|
   gem.email         = ["rhv@redhotvengeance.com"]
   gem.description   = "Deploy smart, not hard."
   gem.summary       = "Deploy smart, not hard."
-  gem.homepage      = ""
+  gem.homepage      = "https://github.com/redhotvengeance/deep_thought"
 
   gem.files         = `git ls-files`.split("\n") - %w[.gitignore]
   gem.executables   = gem.files.grep(%r{^bin/}).map{ |f| File.basename(f) }
