@@ -154,7 +154,7 @@ Your custom deployer should live in the `DeepThought::Deployer` namespace. Deep 
 
 The `setup?` method is called before deploys to ensure the project is setup as needed for the deploy to execute properly. For instance, if your deployer deploys by pushing to a Git remote, you can ensure that the Git remotes exist within `setup?`. Your deployer may have no need of `setup?`, in which case just don't bother overwriting the method.
 
-A reference to the project is passed to the `setup?` method, as is the project config (which is the hash generated from the project's `.deepthought.yml` file). You can use access to the config to take advantage of any deployer-specfic data that may have been put into the `.deepthought.yml` file.
+A reference to the project is passed to the `setup?` method, as is the project config (which is the hash generated from the project's `.deepthought.yml` file). You can use access to the config to take advantage of any deployer-specific data that may have been put into the `.deepthought.yml` file.
 
 The `setup?` method should return `true` when successful and `false` when not.
 
