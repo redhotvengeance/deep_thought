@@ -1,4 +1,4 @@
-# DeepThought
+# Deep Thought
 
 Deploy smart, not hard.
 
@@ -6,7 +6,7 @@ Deploy smart, not hard.
 
 Deep Thought takes all of the thought out of deploying.
 
-Want to prevent deployment conflicts? Deep Thought does that. Want to deploy with Hubot? Deep Thought has you covered. Looking to ensure a build is green before it is deployed? Deep Thought yawns at your puny requests. Want a web interface? Got it. How about an API? Yep. Security? Totally locked down. Deep Thought has your deployments covered.
+Want to prevent deployment conflicts? Deep Thought does that. Want to deploy with Hubot? Deep Thought has you covered. Looking to ensure a build is green before it is deployed? Deep Thought yawns at your puny requests. Want a web interface? Got it. An API? Yep. Security? Totally locked down. Deep Thought is master of your deployments.
 
 Deep Thought was inspired by GitHub's own Hubot+Heaven workflow. Check out [Zach Holman's talk](http://zachholman.com/talk/unsucking-your-teams-development-environment/) to see the original inspiration.
 
@@ -20,7 +20,7 @@ Use [this Gist](https://gist.github.com/redhotvengeance/5746731) to get started:
 
 ### Setup
 
-Deep Thought is designed to be deployed to Heroku:
+Deep Thought needs an environment with Ruby and Git installed, and also access to a PostgreSQL database. Deep Thought will work fine on any server or VM matching those requirements, though it is largely designed to be deployed to Heroku:
 
     heroku apps:create [NAME]
     heroku config:set RACK_ENV=production
@@ -54,7 +54,20 @@ Deep Thought requires the use of a background worker for deployments. Normally, 
 
 ### Add a project
 
-Once logged in, click the `+ add project` button on the `projects` page. Enter a unique project name and the remote Git repository url for the project. Click `create project`, and now your project is set up and ready to deploy.
+Once logged in, click the `+ add project` button on the `projects` page. Enter a unique project name and the remote Git repository url for the project. Click `create project`, and your project will be set up and ready to deploy.
+
+### Deploy
+
+Click on a project from the homepage. Select the branch to deploy, and optionally define additional parameters:
+
+- `environment`: Sets the environment to deploy to (`development`, `staging`, `production`, etc - defaults to `development`)
+- `box`: Sets a specific server to deploy to (passed as an argument to the shell script - `script/deploy development deploy box=prod`)
+- `action`: Sets a subtask to deploy (for instance, if "config" is added, then Deep Thought would execute `script/deploy development deploy:config`)
+- `variable`: Sets additional values that can be passed to the deploy (for instance, if set to `force=true`, Deep Thought would execute `script/deploy development deploy force=true`)
+
+Click `deploy` - now a deployment is underway!
+
+Deep Thought will let you know once the deployment is finished. If you'd like to see a log of previous deployments, click the `history` button. Clicking on a subsequent deployment will show you the details of that deployment.
 
 ### .deepthought.yml
 
@@ -68,37 +81,28 @@ Here's an example `.deepthought.yml`:
       name: project-name
     root: script/deploy
 
-`deploy_type` should be the key name for the deployer (defaults to `shell`). `ci` is group for continuous integration setting - `enabled` tells Deep Thought to check the CI server for green builds and `name` is the name of the project on the CI server. `root` is a shell deployer-specific setting - it tells Deep Thought where the deploy shell script it located in the project (defaults to `script/deploy`).
+Let's break that down. The first line specifies the key name for the deployer this project will use (defaults to `shell`).
 
-Make sure to add any dependencies needed to deploy your project to your Gemfile.
+Lines 2-4 specify the continuous integration settings. `enabled` tells Deep Thought to check the CI server for green builds. `name` is the name of the project on the CI server.
+
+Lines 1-4 are common to all projects, but additional data can be added to the config to supply information to a specific deployer. In this case, line 5 tells the shell deployer where to find the shell script it will execute (which defaults to `script/deploy`).
+
+In addition to the `.deepthought.yml` file, make sure to add any dependencies needed to deploy your project to the project's Gemfile.
 
 ### Add a key
 
-It is likely that your project repos are private, and even if they are not, you still probably need to authenticate via ssh key to access servers for deployment. If you need to add an ssh key to Deep Thought hosted on Heroku, then you can use the Deep Thought buildpack:
+Your project repos may be private, and even if they are not, you still probably need to authenticate via ssh key to access servers for deployment. If you need to add an ssh key to a Deep Thought hosted on Heroku, then you can use the [Deep Thought buildpack](https://github.com/redhotvengeance/heroku-buildpack-deep-thought):
 
-    heroku config:set BUILDPACK_URL=https://github.com/redhotvengeance/heroku-buildpack-deep-thought
+    heroku config:set BUILDPACK_URL=https://github.com/redhotvengeance/heroku-buildpack-deep-thought.git
     ssh_key=`cat ~/.ssh/your_ssh_key`
     heroku config:set SSH_KEY="$ssh_key"
     heroku config:set SSH_HOST=github.com
 
 Keep in mind that the ssh key shouldn't have a password - otherwise Deep Thought won't be able to use it!
 
-### Deploy
-
-Click on a project from the homepage. Select the branch to deploy, and optionally define additional parameters:
-
-- `environment`: Sets the environment to deploy to (`development`, `staging`, `production`, etc - defaults to `development`).
-- `box`: Sets a specific server to deploy to (passed as an argument to the shell script - `script/deploy development deploy box=prod`).
-- `action`: Sets a subtask to deploy (for instance, if "config" is added, then Deep Thought would execute `script/deploy development deploy:config`).
-- `variable`: Sets additional values that can be passed to the deploy (for instance, if set to `force=true`, Deep Thought would execute `script/deploy development deploy force=true`).
-
-Click `deploy` - now a deployment is underway!
-
-Deep Thought will let you know once the deployment is finished. If you'd like to see a log of previous deployments, click the `history` button. Clicking on a subsequent deployment will show you the details of that deployment.
-
 ### Continuous integration
 
-If you use continuous integration, you can have Deep Thought check to make sure a build is green before deploying. By default, Heroku supports interfacing with [Janky](https://github.com/github/janky).
+If you use continuous integration, you can have Deep Thought check to make sure a build is green before deploying. By default, Deep Thought supports interfacing with [Janky](https://github.com/github/janky).
 
 To enable continuous integration, several environment variables must be set:
 
@@ -125,16 +129,92 @@ The current API routes are:
 
 Hubot integrates wonderfully with Deep Thought. He communicates via the API, which means he'll need an account with an API generated.
 
-Once you've setup the Hubot user and have its API key, grab the Deep Thought Hubot script and add it to your Hubot.
+Once you've setup the Hubot user and have its API key, grab the [Deep Thought Hubot script](https://github.com/redhotvengeance/hubot-scripts/blob/add-deep-thought/src/scripts/deep-thought.coffee) and add it to your Hubot.
 
 Set the following config variables for your Hubot:
 
-    heroku config:set DEEP_THOUGHT_URL=https://your-deep-thought.herokuapp.com
-    heroku config:set DEEP_THOUGHT_TOKEN=<hubot api key>
+    heroku config:set HUBOT_DEEP_THOUGHT_URL=https://your-deep-thought.herokuapp.com
+    heroku config:set HUBOT_DEEP_THOUGHT_TOKEN=<hubot api key>
 
-Finally, Deep Thought likes to talk back to Hubot to let him know how deploys are going. Login to the Hubot account on Deep Thought, head to the `me` page, and set the `notification url` to `http://your.hubot.com/notify`.
+Finally, Deep Thought likes to talk back to Hubot to let him know how deploys have gone. Login to the Hubot account on Deep Thought, head to the `me` page, and set the `notification url` to `http://your.hubot.com/deep-thought/notify/:room_name`, where `:room_name` is the name of the chat room you'd like Hubot to post in.
 
-To learn more about how to ask Hubot to deploy, check out the Hubot script.
+To learn more about how to ask Hubot to deploy, check out the [Hubot script](https://github.com/redhotvengeance/hubot-scripts/blob/add-deep-thought/src/scripts/deep-thought.coffee).
+
+## Plugins
+
+Deep Thought is architected on a plugin-based system, making it extendable with new deployers and CI service integrations. To see currently available plugins, check out the list of [deployers](https://github.com/redhotvengeance/deep_thought/wiki/Deployers) and [CI services](https://github.com/redhotvengeance/deep_thought/wiki/CI-Services) found in the [wiki](https://github.com/redhotvengeance/deep_thought/wiki).
+
+### Deployers
+
+Looking to make a new deployer? Excellent!
+
+Your custom deployer should live in the `DeepThought::Deployer` namespace. Deep Thought deployers have two required methods: `setup?(project, config)` and `execute?(deploy, config)`. Both are predicate methods, and should return only truthy or falsy values. Your deployer should extend [`DeepThought::Deployer::Deployer`](https://github.com/redhotvengeance/deep_thought/blob/master/lib/deep_thought/deployer/deployer.rb), so it will inherit both of these methods - from there you can overwrite them with custom functionality as needed.
+
+#### `setup?(project, config)`
+
+The `setup?` method is called before deploys to ensure the project is setup as needed for the deploy to execute properly. For instance, if your deployer deploys by pushing to a Git remote, you can ensure that the Git remotes exist within `setup?`. Your deployer may have no need of `setup?`, in which case just don't bother overwriting the method.
+
+A reference to the project is passed to the `setup?` method, as is the project config (which is the hash generated from the project's `.deepthought.yml` file). You can use access to the config to take advantage of any deployer-specfic data that may have been put into the `.deepthought.yml` file.
+
+The `setup?` method should return `true` when successful and `false` when not.
+
+#### `execute?(deploy, config)`
+
+The `execute?` method is where deployment happens.
+
+This method should start the deploy and return once the deployment is finished. You also have access to the project config in this method, just in case any data from `.deepthought.yml` is necessary for deploying.
+
+Once the deployment is complete, the output log from the deployment should be stored in `deploy.log`.
+
+The `execute?` method should return `true` if the deploy was successful and `false` if it was not.
+
+#### Register
+
+You will also have to register your deployer with Deep Thought. When you register your deployer, you'll specify a key name and the deployer class. The key name is the same key used to set the `deploy_type` in `.deepthought.yml`.
+
+Here is an example of how to register a deployer with Deep Thought:
+
+    DeepThought::Deployer.register_adapter('key', DeepThought::Deployer::CustomDeployer)
+
+Make sure to add your new deployer to the [list of plugins](https://github.com/redhotvengeance/deep_thought/wiki/Deployers) so others can find it and benefit from your contributions!
+
+### CI Services
+
+Looking to make a new CI service integration? Fantastic!
+
+Your custom CI service should live in the `DeepThought::CIService` namespace. Deep Thought CI service integrations have two required methods: `setup?(settings)` and `is_branch_green?(app, branch, hash)`. Both are predicate methods, and should return only truthy or falsy values. Your CI service should extend [`DeepThought::CIService::CIService`](https://github.com/redhotvengeance/deep_thought/tree/master/lib/deep_thought/ci_service/ci_service.rb), so it will inherit both of these methods - from there you can overwrite them with custom functionality as needed.
+
+#### `setup?(settings)`
+
+The `setup?` method is called upon application start, and ensures the CI service is properly setup for use during the application lifetime.
+
+The application environment is passed to the method via the `settings` argument. The abstract method already sets three instance variables from the environment:
+
+- `@endpoint` - Set from `ENV['CI_SERVICE_ENDPOINT'], and specifies the URI to the CI service being pinged
+- `@username` - Set from `ENV['CI_SERVICE_USERNAME'], and specifies the username used for authentication with the CI service
+- `@password` - Set from `ENV['CI_SERVICE_PASSWORD'], and specifies the username used for authentication with the CI service
+
+It is likely you will not have to overwrite this method since it already sets these common variables.
+
+The `setup?` method should return `true` when successful and `false` when not.
+
+#### `is_branch_green?(app, branch, hash)`
+
+The `is_branch_green?` method is where build status checking happens.
+
+This method should ensure that for the app/branch/commit hash being deployed, the CI server has done a successful build.
+
+The `is_branch_green?` method should return `true` if the build was reported successful and `false` if it was not.
+
+#### Register
+
+You will also have to register your CI service with Deep Thought. When you register your CI service, you'll specify a key name and the CI service class. The key name is the same key used to set the `CI_SERVICE` environment variable.
+
+Here is an example of how to register a CI service with Deep Thought:
+
+    DeepThought::CIService.register_adapter('key', DeepThought::CIService::CustomCIService)
+
+Make sure to add your new CI service to the [list of plugins](https://github.com/redhotvengeance/deep_thought/wiki/CI-Services) so others can find it and benefit from your contributions!
 
 ## Enjoy
 
