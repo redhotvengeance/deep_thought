@@ -238,9 +238,15 @@ Set it up:
 
     script/bootstrap
 
+The bootstrap script will create an `.env`, install all required gems, set up the databases, and make a user. Of course, you can always do it manually.
+
 Create an `.env`:
 
     echo RACK_ENV=development > .env
+
+Install required gems:
+
+    bundle install --binstubs
 
 Set up the databases (PostgreSQL):
 
@@ -248,6 +254,9 @@ Set up the databases (PostgreSQL):
     createdb -O deep_thought -E utf8 deep_thought_development
     createdb -O deep_thought -E utf8 deep_thought_test
     rake db:migrate
+
+Make a user:
+    bundle exec rake create_user[test@test.com,secret]
 
 Start the server:
 
