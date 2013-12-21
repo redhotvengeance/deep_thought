@@ -254,8 +254,10 @@ Set up the databases (PostgreSQL):
     createdb -O deep_thought -E utf8 deep_thought_development
     createdb -O deep_thought -E utf8 deep_thought_test
     rake db:migrate
+    rake db:migrate RACK_ENV=test
 
 Make a user:
+
     bundle exec rake create_user[test@test.com,secret]
 
 Start the server:
