@@ -35,6 +35,7 @@ Gem::Specification.new do |gem|
   gem.add_development_dependency "shotgun", "~>0.9"
   gem.add_development_dependency "thin", "~>1.6"
   gem.add_development_dependency "racksh", "~>1.0.0"
+  gem.add_development_dependency "dotenv", "~>0.9"
 
   # # testing
   gem.add_development_dependency "minitest", "~>4.7"

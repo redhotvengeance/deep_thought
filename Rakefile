@@ -3,6 +3,9 @@ $LOAD_PATH.unshift(File.expand_path("../lib", __FILE__))
 require "bundler/gem_tasks"
 require "active_record"
 require "fileutils"
+require 'dotenv'
+
+Dotenv.load
 
 ENV["RACK_ENV"] ||= "development"
 
