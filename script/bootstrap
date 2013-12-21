@@ -1,3 +1,67 @@
 #!/bin/sh
 
+echo ''
+echo 'Boostraping Deep Thought...'
+
+ruby --version >/dev/null 2>&1 || { echo >&2 "\nIt looks like the Ruby isn't installed. You're going to need it: https://www.ruby-lang.org/en/\n"; exit 1; }
+git --version >/dev/null 2>&1 || { echo >&2 "\nIt looks like the Heroku Toolbelt isn't installed. You're going to need it: http://git-scm.com/\n"; exit 1; }
+psql --version >/dev/null 2>&1 || { echo >&2 "\nIt looks like PostgreSQL isn't installed. You're going to need it: http://www.postgresql.org/\n"; exit 1; }
+
+create_env() {
+  echo "RACK_ENV=development" > "${PWD}/.env"
+  echo "SESSION_SECRET=secret" >> "${PWD}/.env"
+}
+
+echo ''
+echo 'Creating .env file...'
+
+if [ -f "${PWD}/.env" ]; then
+  echo ''
+  read -p "File already exists - what would you like to do? [s]kip or [o]verwrite? " action
+
+  case "$action" in
+    o )
+      create_env
+  esac
+else
+  create_env
+fi
+
+echo ''
+echo 'Installing required gems...'
+
 bundle install --binstubs
+
+create_db() {
+  psql -l >/dev/null 2>&1 || { echo >&2 "\nIt looks like PostgreSQL isn't running. Depending on how you installed it, there are any number of ways it could be started. Go get it running and then bootstrap again.\n"; exit 1; }
+
+  echo ''
+  echo 'Creating deep_thought user...'
+
+  createuser deep_thought >/dev/null 2>&1
+
+  echo 'Creating deep_thought_development database...'
+  createdb -O deep_thought -E utf8 deep_thought_development >/dev/null 2>&1
+
+  echo 'Creating deep_thought_test database...'
+  createdb -O deep_thought -E utf8 deep_thought_test >/dev/null 2>&1
+
+  echo 'Running migrations...'
+  bundle exec rake db:migrate
+  bundle exec rake db:migrate RACK_ENV=test
+
+  echo 'Creating user test@test.com with password "secret"'
+  bundle exec rake create_user[test@test.com,secret] >/dev/null 2>&1
+}
+
+echo ''
+read -p "Would you like me to create and configure the PostgreSQL database for this project? [y]es or [n]o? " action
+
+case "$action" in
+  y )
+    create_db
+esac
+
+echo ''
+echo 'Done!'
+echo ''
