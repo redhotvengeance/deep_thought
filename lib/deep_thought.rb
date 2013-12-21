@@ -17,17 +17,18 @@ require 'deep_thought/version'
 
 module DeepThought
   def self.setup(settings)
-    env = settings['RACK_ENV']
+    env = settings['RACK_ENV'] ||= 'development'
 
     if env != "production"
       settings["DATABASE_URL"] ||= "postgres://deep_thought@localhost/deep_thought_#{env}"
     end
 
     database = URI(settings["DATABASE_URL"])
+    settings["DATABASE_ADAPTER"] ||= "postgresql"
 
     connection = {
-      :adapter   => "postgresql",
-      :encoding  => "unicode",
+      :adapter   => settings["DATABASE_ADAPTER"],
+      :encoding  => "utf8",
       :database  => database.path[1..-1],
       :pool      => 5,
       :username  => database.user,

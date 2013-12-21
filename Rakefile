@@ -7,8 +7,6 @@ require 'dotenv'
 
 Dotenv.load
 
-ENV["RACK_ENV"] ||= "development"
-
 require "deep_thought"
 
 DeepThought.setup(ENV)
