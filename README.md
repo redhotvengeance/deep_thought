@@ -20,7 +20,9 @@ Use [this Gist](https://gist.github.com/redhotvengeance/5746731) to get started:
 
 ### Setup
 
-Deep Thought needs an environment with Ruby and Git installed, and also access to a PostgreSQL database. Deep Thought will work fine on any server or VM matching those requirements, though it is largely designed to be deployed to Heroku:
+Deep Thought needs an environment with Ruby and Git installed, and also access to a database. Deep Thought by default expects a PostgreSQL database, but should work with any ActiveRecord-compatible database.
+
+Deep Thought will work fine on any server or VM matching those requirements, though it is largely designed to be deployed to Heroku:
 
     heroku apps:create [NAME]
     heroku config:set RACK_ENV=production
@@ -51,6 +53,14 @@ Deep Thought requires the use of a background worker for deployments. Normally, 
 
     HEROKU_APP=<app-name>
     HEROKU_API_KEY=<your-heroku-api-key>
+
+If you'd like to use a database other than PostgreSQL, you'll need to add appropriate gem to your Gemfile and set the `DATABASE_ADAPTER` environment variable. For instance, if you'd like to use MySQL, add the gem to the Gemfile:
+
+    gem "mysql2"
+
+Then set the adapter environment variable:
+
+    DATABASE_ADAPTER=mysql2
 
 ### Add a project
 
