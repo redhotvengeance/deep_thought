@@ -11,6 +11,7 @@ require 'deep_thought/deployer'
 require 'deep_thought/deployer/shell'
 require 'deep_thought/ci_service'
 require 'deep_thought/ci_service/janky'
+require 'deep_thought/ci_service/travis'
 require 'deep_thought/notifier'
 require 'deep_thought/scaler'
 require 'deep_thought/version'
@@ -60,4 +61,5 @@ module DeepThought
 
   DeepThought::Deployer.register_adapter('shell', DeepThought::Deployer::Shell)
   DeepThought::CIService.register_adapter('janky', DeepThought::CIService::Janky)
+  DeepThought::CIService.register_adapter('travis', DeepThought::CIService::Travis)
 end
