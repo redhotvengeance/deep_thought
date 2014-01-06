@@ -3,7 +3,7 @@ env:
 
 language: ruby
 
-install: script/bootstrap
+install: bundle install --binstubs
 
-before_script: psql -c 'create database deep_thought_test;' -U postgres
+before_script: psql -c 'create database deep_thought_test;' -U postgres; bundle exec rake db:migrate RACK_ENV=test
 script: script/test
