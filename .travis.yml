@@ -1,0 +1,9 @@
+env:
+  - DATABASE_URL="postgres://postgres@localhost/deep_thought_test"
+
+language: ruby
+
+install: script/bootstrap
+
+before_script: psql -c 'create database deep_thought_test;' -U postgres
+script: script/test
