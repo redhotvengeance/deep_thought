@@ -1,6 +1,7 @@
 # Deep Thought
 
 [![Build Status](https://travis-ci.org/redhotvengeance/deep_thought.png?branch=master)](https://travis-ci.org/redhotvengeance/deep_thought)
+[![Coverage Status](https://coveralls.io/repos/redhotvengeance/deep_thought/badge.png)](https://coveralls.io/r/redhotvengeance/deep_thought)
 
 Deploy smart, not hard.
 
