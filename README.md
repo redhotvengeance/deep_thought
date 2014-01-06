@@ -1,5 +1,7 @@
 # Deep Thought
 
+[![Build Status](https://travis-ci.org/redhotvengeance/deep_thought.png?branch=master)](https://travis-ci.org/redhotvengeance/deep_thought)
+
 Deploy smart, not hard.
 
 ## See
