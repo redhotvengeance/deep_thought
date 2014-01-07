@@ -14,6 +14,8 @@ Want to prevent deployment conflicts? Deep Thought does that. Want to deploy wit
 
 Deep Thought was inspired by GitHub's own Hubot+Heaven workflow. Check out [Zach Holman's talk](http://zachholman.com/talk/unsucking-your-teams-development-environment/) to see the original inspiration.
 
+Have a question about Deep Thought? Join the #deepthought IRC channel on freenode.
+
 ## Want
 
 Use [this Gist](https://gist.github.com/redhotvengeance/5746731) to get started:
