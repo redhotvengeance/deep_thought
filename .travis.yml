@@ -2,6 +2,22 @@ env:
   - DATABASE_URL="postgres://postgres@localhost/deep_thought_test"
 
 language: ruby
+rvm:
+  - 1.9.3
+  - 2.0.0
+  - 2.1.0
+  - jruby
+  - rbx-2.0
+  - rbx-2.1
+  - rbx-2.2
+  - rbx
+  - ruby-head
+
+matrix:
+  allow_failures:
+    - rvm: jruby
+    - rvm: rbx
+    - rvm: ruby-head
 
 install: bundle install --binstubs
 
