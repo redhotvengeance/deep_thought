@@ -10,10 +10,12 @@ rvm:
   - rbx-2.0.0
   - rbx-2.1.0
   - rbx-2.2.0
+  - rbx
 
 matrix:
   allow_failures:
     - rvm: jruby
+      rvm: rbx
 
 install: bundle install --binstubs
 
